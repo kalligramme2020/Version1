@@ -13,7 +13,7 @@
 
                                 </div>
 
-                                <div class="preview" style="display: inline-block">
+                                <div class="preview" >
 
                                 </div>
                             </div>
@@ -67,26 +67,7 @@
 
         methods: {
             GetImage(e){
-                var files = e.target.files ,
-                    filesLength = files.length ;
-                for (var i = 0; i < filesLength ; i++) {
-                    var f = files[i]
-                    var fileReader = new FileReader();
-                    var that = this;
-                    fileReader.onload = (function(e) {
-                        var file = e.target;
-                        that.profils.push(file.result)
-                        // console.log(file.result)
-                        $("<img>",{
-                            class : "imageThumb ml-4",
-                            width : 100,
-                            src : e.target.result,
-                            title : file.name
-                        }).insertAfter(".preview");
-                    });
-                    fileReader.readAsDataURL(f);
-                }
-                // console.log(this.profils)
+
             },
 
             AddState(){

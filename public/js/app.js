@@ -4269,31 +4269,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    GetImage: function GetImage(e) {
-      var files = e.target.files,
-          filesLength = files.length;
-
-      for (var i = 0; i < filesLength; i++) {
-        var f = files[i];
-        var fileReader = new FileReader();
-        var that = this;
-
-        fileReader.onload = function (e) {
-          var file = e.target;
-          that.profils.push(file.result); // console.log(file.result)
-
-          $("<img>", {
-            "class": "imageThumb ml-4",
-            width: 100,
-            src: e.target.result,
-            title: file.name
-          }).insertAfter(".preview");
-        };
-
-        fileReader.readAsDataURL(f);
-      } // console.log(this.profils)
-
-    },
+    GetImage: function GetImage(e) {},
     AddState: function AddState() {
       console.log(this.profils);
       axios.post('api/state', {
@@ -48177,10 +48153,7 @@ var render = function() {
                   })
                 ]),
                 _vm._v(" "),
-                _c("div", {
-                  staticClass: "preview",
-                  staticStyle: { display: "inline-block" }
-                })
+                _c("div", { staticClass: "preview" })
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-6" }, [
