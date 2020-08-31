@@ -11,7 +11,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card mb-5">
-                    <div class="card-header">Informations generales</div>
+                    <div class="card-header">Informations generaless</div>
                 <FlashMessage class="flashmessage"></FlashMessage>
 
                     <div class="card-body">
