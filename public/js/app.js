@@ -49064,7 +49064,7 @@ var render = function() {
           { staticClass: "card mb-5" },
           [
             _c("div", { staticClass: "card-header" }, [
-              _vm._v("Informations generales")
+              _vm._v("Informations generale")
             ]),
             _vm._v(" "),
             _c("FlashMessage", { staticClass: "flashmessage" }),
