@@ -38,7 +38,6 @@ class LocataireControler extends Controller
      */
     public function store(Request $request)
     {
-        dd($request['image']);
         $this->validate($request,[
             'nom' => 'required|min:3',
             'cni' => 'required|min:3','email','unique:users',
