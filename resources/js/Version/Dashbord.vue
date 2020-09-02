@@ -1,12 +1,15 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Example Component</div>
 
                     <div class="card-body">
-                        <h1>Home pages vues</h1>
+                        <div class="jumbotron jumbotron-fluid">
+                            <div class="container">
+                                <h1 class="display-4">Dashboard</h1>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
