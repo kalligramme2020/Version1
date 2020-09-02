@@ -1,5 +1,6 @@
 <template>
     <div id="content">
+
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-md-12 mt-3">
@@ -103,21 +104,22 @@
 
             deleteTenant(id){
                 axios.delete('api/tenants/' + id)
-                    .then((response)=>{
-                        if (response.data){
-                            this.flashMessage.success({
-                                title: 'Supprimer',
-                                message: 'Action reussit',
-                                time: 3050,
-                                flashMessageStyle: {
-                                    backgroundColor: 'linear-gradient(#e66465, #9198e5)',
-                                    position:top,
-                                }
-                            });
-                        } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
-                        }
-                    })
+                .then((response)=>{
+                    this.tenants = response.data
+                    if (response.data){
+                        this.flashMessage.success({
+                            title: 'Supprimer',
+                            message: 'Action reussit',
+                            time: 3050,
+                            flashMessageStyle: {
+                                backgroundColor: 'linear-gradient(#e66465, #9198e5)',
+                                position:top,
+                            }
+                        });
+                    } else {
+                        this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                    }
+                })
             },
         },
     }

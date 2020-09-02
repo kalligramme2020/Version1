@@ -54,7 +54,7 @@
                             <router-link to="/tenants" class="btn bg-danger">retour</router-link>
 
 
-                            <router-link to="/tenants" class="btn btn-warning ml-2"> Modifier</router-link>
+                            <router-link :to="{ name: 'edit', params: { id: tenant.id }}" class="btn btn-warning ml-2"> Modifier</router-link>
 
                             <button @click="deletetenant(tenant.id)" class="btn btn-danger">suprimer</button>
 

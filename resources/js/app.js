@@ -10,9 +10,14 @@ Vue.use(FlashMessage);
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload)
 
+
+import VueMoment from 'vue-moment'
+Vue.use(VueMoment)
+
 window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('add-tenant', require('./tenant/Tenants.vue').default);
 
 import Dashbord from './Version/Dashbord.vue';
 

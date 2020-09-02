@@ -45,7 +45,7 @@
                     <div class="card-footer">
                         <router-link to="/payment" class="btn btn-info">Retour</router-link>
 
-                        <router-link to="" class="btn btn-warning ml-2"> Modifier</router-link>
+                        <router-link :to="{ name: 'edit_payment', params: { id: invoice.id }}" class="btn btn-warning ml-2"> Modifier</router-link>
 
                         <button @click="deletetenant(tenant.id)" class="btn btn-danger ml-2">suprimer</button>
 

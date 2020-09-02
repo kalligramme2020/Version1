@@ -130,7 +130,7 @@ class BienController extends Controller
      */
     public function edit($id)
     {
-        $editbien = Bien::with('pieces','tbien','countrie')->find($id);
+        $editbien = Bien::with('pieces','tbien','countrie', 'enfantsid','parentid')->find($id);
         return response()->json($editbien);
     }
 

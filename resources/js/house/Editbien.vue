@@ -15,8 +15,8 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="ty">type du bien</label>
-                                    <select class="form-control" id="ty" v-model="TbienEdit" required>
-                                        <option></option>
+                                    <select class="form-control" id="ty" v-model="tb.id" required>
+                                        <option>{{tb.name}}</option>
                                         <option v-for="typebien in typeBiens" :key="typebien.id"  v-bind:value="typebien.id"  >{{typebien.name}}</option>
                                     </select>
                                 </div>
@@ -26,7 +26,7 @@
                                 </div>
 
                                 <div class="form-group col-md-6 ml-2" >
-                                    <label for="papa" class="text-success">Est ce un sous bien? si oui chosir le bien parent</label>
+                                    <label for="papa" class="text-success">bien parent</label>
                                     <select class="form-control" id="papa" v-model="edithouse.parent_id" >
                                         <option></option>
                                         <option v-for="parent in bienParent" :key="parent.id" v-bind:value="parent.id">{{parent.name}}</option>
@@ -47,8 +47,8 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="pays">pays <i class="fa fa-flag-checkered" aria-hidden="true"></i></label>
-                                    <select class="form-control" id="pays" v-model="editpays" >
-                                        <option ></option>
+                                    <select class="form-control" id="pays" v-model="city.id" >
+                                        <option>{{city.pays}}</option>
                                         <option v-for="country in countries" v-bind:value="country.id" >{{ country.pays }}</option>
                                     </select>
                                 </div>
@@ -164,8 +164,8 @@
                  TbienEdit:'',
                 editpays:'',
                 countries:"", typeBiens:"", //get pays
-                tb:{},//tupe du bien
-                city:{}, //ville du bien
+                tb:{ 'name':"", 'id':"" },//tupe du bien
+                city:{ 'pays':"", "id":''}, //ville du bien
 
                 pieces:{
                     'banquet':"", 'appart':'',  'cuisine':"", 'bain':"",'salon':"",'chambre':"",
@@ -188,7 +188,7 @@
                     this.tb = response.data.tbien
                     this.city = response.data.countrie
                     this.pieces = response.data.pieces
-                    // console.log(response.data)
+                    console.log(this.edithouse)
 
                 });
 
@@ -220,10 +220,10 @@
             editbien(){
                 axios.patch('api/bien/' + this.$route.params.id, {
                     parent_id:this.edithouse.parent_id,
-                    typebien:this.TbienEdit,
+                    typebien:this.tb.id,
                     name:this.edithouse.name,
                     ville:this.edithouse.ville,
-                    pays:this.editpays,
+                    pays:this.city.id,
                     region:this.edithouse.region,
                     surface:this.edithouse.surface,
                     addresse:this.edithouse.addresse,

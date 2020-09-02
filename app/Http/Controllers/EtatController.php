@@ -17,7 +17,13 @@ class EtatController extends Controller
      */
     public function index()
     {
+
         $states = Etat::all()->where('users_id', '==', Auth::id());
+        foreach ($states as $data){
+
+            $data->photo = json_decode($data->photo);
+        }
+
         return response()->json($states);
 
 
@@ -42,27 +48,28 @@ class EtatController extends Controller
      */
     public function store(Request $request)
     {
-        $files = $request['photos'];
+            $pictures = [];
+            foreach( $request->file('file') as $files ){
 
-        if(!empty($files)){
-
-            foreach ($files as $file) {
-
-                $name = time().'.' . explode('/', explode(':', substr($file, 0, strpos($file, ';')))[1])[1];
-                \Image::make($request->get('photos'))->save(public_path('profil/').$name);
-
-                $state = Etat::create([
-                    'users_id' => Auth::id(),
-                    'description' => $request['description'],
-                    'location_id' => $request['location_lier'],
-                    'photo' => $name,
-                ]);
+                $filename = '/image/'.$files->getClientOriginalName();
+                $files->move(public_path('image'),$filename);
+                $pictures[] = $filename;
             }
-        }
 
-        return response()->json([
-            'message' => 'nouveletat'
-        ]);
+        $desc = $request['description'];
+        $local = $request['location'];
+
+            $tore = Etat::create([
+
+                'description' => $desc,
+                    'location_id' =>$local,
+                    'users_id' => Auth::id(),
+                  'photo' => json_encode($pictures),
+            ]);
+
+            return response()->json(['message' => 'hfhfkshfhsjkhks']);
+
+
 
     }
 
@@ -108,9 +115,10 @@ class EtatController extends Controller
      */
     public function destroy($id)
     {
-
+        $etat = Etat::find($id);
+        $etat->delete();
         return response()->json([
-            'message' => 'nouveletat'
+            'message' => 'supprimer'
         ]);
     }
 }

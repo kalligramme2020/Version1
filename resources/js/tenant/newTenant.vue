@@ -1,7 +1,6 @@
 <template>
     <div class="container-fluid">
 
-
         <div class = "page-header text-center">
             <h4> Nouveau locataire</h4>
         </div>
@@ -17,7 +16,7 @@
                     <div class="card-body">
 
                         <form enctype="multipart/form-data">
-
+                            
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="nom">Noms</label>

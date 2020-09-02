@@ -14,10 +14,15 @@ class LocataireControler extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+
+    private function refresh(){
         $tenants = Locataire::all()->where('users_id', '==', Auth::id());
         return response()->json( $tenants );
+    }
+
+    public function index()
+    {
+        return $this->refresh();
     }
 
     /**
@@ -175,8 +180,6 @@ class LocataireControler extends Controller
     {
         $tenant = Locataire::find($id);
         $tenant->delete();
-        return response()->json([
-            'message' => 'supprimer'
-        ]);
+        return $this->refresh();
     }
 }

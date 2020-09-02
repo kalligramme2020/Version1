@@ -15,7 +15,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-8" id="type">
                                     <label for="bien">bien louer</label>
-                                    <select class="form-control" id="bien" v-model="bienLouer" >
+                                    <select class="form-control" id="bien" v-model="bienedit.id" >
                                         <option></option>
                                         <option v-for="bien in biens" :key="bien.id" :value="bien.id" >{{bien.name}}</option>
                                     </select>
@@ -23,7 +23,7 @@
 
                                 <div class="form-group col-md-8">
                                     <label for="bienl">locataire</label>
-                                    <select class="form-control" id="bienl" v-model="locataire_id">
+                                    <select class="form-control" id="bienl" v-model="locataire.id">
                                         <option selected></option>
                                         <option v-for="locataire in locataires" :key="locataire.id" :value="locataire.id" >{{locataire.nom}}</option>
                                     </select>
@@ -41,7 +41,7 @@
 
                                 <div class="form-group col-md-6">
                                     <label for="typeb">type du bail</label>
-                                    <select class="form-control" id="typeb" v-model="typebail">
+                                    <select class="form-control" id="typeb" v-model="editrent.typebail">
                                         <option value=""></option>
                                         <option value="bail d'habitation vide">bail d'habitation vide</option>
                                         <option value="bail d'habitation meuble">bail d'habitation meuble</option>
@@ -177,10 +177,10 @@
         data(){
             return{
                 editrent:{
-                    'locataire_id':"", 'loyer_hc':"",'loyer_ac':"",'debut_bail':"","payment_date":'','fin_bail':"",'payment_date':"",
-                }, bienedit:{} ,locataire:{},
+                    'locataire_id':"", 'loyer_hc':"",'loyer_ac':"",'debut_bail':"","payment_date":'','fin_bail':"",'payment_date':"",'typebail':'',
+                }, bienedit:{'id':"", 'name':""} ,locataire:{'id':"", 'nom':""},
 
-                bienLouer:'',locataire_id:'', typebail:'',
+                bienLouer:'',locataire_id:'',
 
                 biens:"", locataires:"" , //liste des bien et locataire
 
@@ -190,7 +190,7 @@
         created(){
             axios.get('api/rentale/'+ this.$route.params.id +'/edit' )
                 .then((response)=>{
-                    // console.log(response.data)
+                    console.log(response.data)
                     this.editrent = response.data
                     this.bienedit = response.data.bien
                     this.locataire = response.data.locataire
@@ -207,7 +207,7 @@
         methods:{
             EditRent(){
                 axios.patch('api/rentale/'+ this.editrent.id,{
-                    bienlouer:this.bienLouer,
+                    bienlouer:this.bienedit.id,
                     locataire_id:this.locataire_id,
                     description:this.editrent.description,
                     identifiant:this.editrent.identifiant,
@@ -218,7 +218,7 @@
                     loyerac:this.editrent.loyer_ac,
                     debutb:this.editrent.debut_bail,
                     finb:this.editrent.finb,
-                    typebail:this.typebail,
+                    typebail:this.editrent.typebail,
                     paiement_date:this.editrent.payment_date,
                     garantir:this.editrent.garantir,
                     charge:this.editrent.charge

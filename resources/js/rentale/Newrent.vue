@@ -3,7 +3,7 @@
         <FlashMessage class="flashmessage"></FlashMessage>
 
         <div class = "page-header text-center">
-            <h4> Nouvel location</h4>
+            <h4> Nouvel location.</h4>
         </div>
         <div class="dropdown-divider"></div>
         <div class="row justify-content-center">
@@ -80,6 +80,12 @@
                                 <div class="form-group col-md-6">
                                     <label for="end">fin du bail</label>
                                     <input type="date" class="form-control" id="end" v-model="NewRent.finb">
+                                </div>
+
+                                <div class="form-group col-md-4" >
+
+                                    <label for="ende">duree:<button @click="Duration" type="button" class=" btn-primary btn-xs">calculer</button></label>
+                                    <input type="text" class="form-control" id="ende" v-model="NewRent.duration">
                                 </div>
 
 
@@ -180,7 +186,7 @@
                   'bienlouer':"", 'locataire_id':"", 'identifiant':"", 'typebail':"",'bienlouer':"",
                   'residence2':"", 'residence1':"", 'activite':"",'debutb':"" , 'finb':"",'locataire_id':"",
                   'loyerac':"", 'loyerhc':"",'charge':"", 'paiement_date':"", 'garantir':"",
-                  'description':"",
+                  'description':"", 'duration':"",
               },
 
                 biens:"", locataires:"" , //liste des bien et locataire
@@ -237,8 +243,18 @@
                     this.NewRent.debutb="", this.NewRent.finb="", this.NewRent.typebail="",
                     this.NewRent.paiement_date="", this.NewRent.garantir="", this.NewRent.garantir="",
                 )
+            },
+
+            Duration() {
+                // this.NewRent.duration = this.NewRent.debutb + ' ' + this.NewRent.finb
+                // this.NewRent.duration = moment();
             }
-        }
+
+        },
+
+        computed: {
+
+        },
 
 
     }

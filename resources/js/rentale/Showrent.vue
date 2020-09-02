@@ -1,76 +1,118 @@
 <template>
-    <div class="container-fluid">
-        <div class="container">
-            <h2>{{rent.identifiant}}</h2>
-            <div class="row justify-content-center mt-5">
-                <div class="card mb-3 col-md-12">
+  <div class="container">
+      <div class="row">
+          <div class="col-md-6">
+              <div class="card border-primary">
+                  <div class="card-header">Informations</div>
+                  <div class="card-body">
+                      <h4 class="card-title text-primary">{{rent.identifiant}}</h4>
+                      <h6 class="card-title">{{rent.debut_bail}} - {{rent.fin_bail}}</h6>
+                      <div class="alert alert-primary text-center " role="alert">
+                          <i class="fas fa-coins fa-lg"></i>
+                          <span class="title">Loyer:</span>
+                          <span  class="title" style="font-size: x-large">{{rent.loyer_hc}} Cfa</span>
+                      </div>
 
-                    <div class="row no-gutters ">
+                      <div class="row">
+                          <div class=" border-right col">
+                              <h6 class="card-title text-info">Locataire:</h6>
+                              <div class="dropdown-divider"></div>
+                              <p> Nom:{{locataire.nom}} {{locataire.prenom}}</p>
 
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <dl class="row pl-5 ">
-                                    <dt class="col-sm-3 mt-3">bien louer</dt>
-                                    <dd class="col-sm-9 mt-3">{{bien.name}}</dd>
+                          </div>
+                          <div class=" border-right col">
+                              <h6 class="card-title text-info" >Adresse:</h6>
+                              <div class="dropdown-divider"></div>
+                              <span class="d-flex"> {{locataire.email}} </span>
+                              <span class="d-flex"> {{locataire.numero}} </span>
+                              <span class="d-flex"> {{locataire.ville}} </span>
+                              <span class="d-flex"> {{locataire.nationalite}} </span>
+                          </div>
+                      </div>
+                      <div class="dropdown-divider"></div>
 
+                      <div class="row">
+                          <div class=" border-right col">
+                              <h6 class="card-title text-info">Proprio:</h6>
+                              <div class="dropdown-divider"></div>
+                              <p> Nom:{{bailieur.name}} {{bailieur.prenom}}</p>
 
-                                    <dt class="col-sm-3 mt-3">locataire</dt>
-                                    <dd class="col-sm-9 mt-3">{{locataire.nom}}</dd>
+                          </div>
+                          <div class=" border-right col">
+                              <h6 class="card-title text-info" >Adresse:</h6>
+                              <div class="dropdown-divider"></div>
+                              <span class="d-flex"> {{bailieur.email}} </span>
+                              <span class="d-flex"> {{bailieur.numero}} </span>
+                              <span class="d-flex"> {{bailieur.ville}} </span>
+                              <span class="d-flex"> {{bailieur.pays}} </span>
+                          </div>
+                      </div>
 
+                      <div class="dropdown-divider"></div>
 
-                                    <dt class="col-sm-3 mt-3">montant</dt>
-                                    <dd class="col-sm-9 mt-3">{{rent.loyer_hc}} frc</dd>
-
-                                    <dt class="col-sm-3 mt-3 text-truncate">loyer + charge</dt>
-                                    <dd class="col-sm-9 mt-3">{{rent.loyer_ac}} frc</dd>
-
-                                    <dt class="col-sm-3 mt-3 text-truncate">charge </dt>
-                                    <dd class="col-sm-9 mt-3">{{rent.charge}} frc</dd>
-
-                                    <dt class="col-sm-3 mt-3 text-truncate">garantir</dt>
-                                    <dd class="col-sm-9 mt-3">{{rent.garantir}} frc</dd>
-
-                                    <dt class="col-sm-3 mt-3 text-truncate">duree</dt>
-                                    <dd class="col-sm-9 mt-3">{{rent.debut_bail}} - {{rent.fin_bail}} </dd>
-
-
-                                    <dt class="col-sm-3 mt-3 text-truncate">nationalité</dt>
-                                    <dd class="col-sm-9 mt-3"></dd>
-
-                                    <dt class="col-sm-3 mt-3 text-truncate">ville</dt>
-                                    <dd class="col-sm-9 mt-3"></dd>
-
-                                    <dt class="col-sm-3 mt-3">Telephone</dt>
-                                    <dd class="col-sm-9 mt-3">
-                                        <dl class="row">
-                                            <dt class="col-sm-4"></dt>
-
-                                        </dl>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                      <div class="row">
+                          <div class=" border-right col">
+                              <h6 class="card-title text-info">paiement:</h6>
+                              <div class="dropdown-divider"></div>
+                              <p> Paiement: Mensuel</p>
+                              <span class="d-flex">Charge: {{rent.charge}} </span>
+                              <span class="d-flex">loyer hors Charge: {{rent.loyer_hc}} </span>
+                              <span class="d-flex">loyer avec Charge: {{rent.loyer_ac}} </span>
 
 
-                <div class="col-md-12">
-                    <div class="card ">
-                        <div class="card-header">
-                            <a class="btn btn-info">Retour</a>
+                          </div>
+                          <div class=" border-right col">
+                              <h6 class="card-title text-info" >Depots:</h6>
+                              <div class="dropdown-divider"></div>
+                              <span class="d-flex">Depot de garantir: {{rent.garantir}} frc </span>
+                          </div>
+                      </div>
 
-                            <router-link to="" class="btn btn-warning ml-2"> Modifier</router-link>
+                      <div class="dropdown-divider"></div>
 
-                            <button class="btn btn-danger">suprimer</button>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                  </div>
+              </div>
+          </div>
 
-                        </div>
 
-                    </div>
-                </div>
-            </div>
+          <div class="col-md-6">
+              <div class="card text-center">
+                  <div class="card-header">
+                      Etats des lieux
+                  </div>
+                  <div class="card-body">
+                      <h5 class="card-title">Special title treatment</h5>
+                      <p class="card-text">It's a broader card with text below as a natural lead-in to extra content. This content is a little longer.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                  </div>
 
-        </div>
-    </div>
+
+                  <div class="card border-success">
+                      <div class="card-body">
+                          <h6 class="card-title text-left text-muted">Description:</h6>
+                          This is some text within a card body.
+                      </div>
+                  </div>
+
+
+              </div>
+          </div>
+
+
+      </div>
+      <div class="card mt-4 ">
+          <div class="card-footer text-center">
+              <router-link to="/rent" class="btn btn-info">Retour</router-link>
+
+              <router-link :to="{ name: 'editrent', params: { id: rent.id }}" class="btn btn-warning ml-2"> Modifier</router-link>
+
+              <button class="btn btn-danger">suprimer</button>
+
+          </div>
+
+      </div>
+  </div>
 </template>
 
 <script>
@@ -79,7 +121,7 @@
 
         data(){
             return{
-                rent:{}, bien:{}, locataire:{},
+                rent:{}, bien:{}, locataire:{},bailieur:{},
             }
         },
 
@@ -92,6 +134,7 @@
                     this.rent = response.data
                     this.bien = response.data.bien
                     this.locataire = response.data.locataire
+                    this.bailieur = response.data.bailler
                 });
         },
     }

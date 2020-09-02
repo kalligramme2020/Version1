@@ -22,7 +22,7 @@
                             <div class="card-body mb-2">
                                 <div class="form-row justify-content-center">
                                     <div class="col-md-8 mb-4 "> <label for="inputState">location lier</label>
-                                        <select id="inputState" class="form-control" v-model="location">
+                                        <select id="inputState" class="form-control" v-model="location.id">
                                             <option ></option>
                                             <option v-for="rent in rental" :value="rent.id" :key="rent.id">{{rent.identifiant}}</option>
                                         </select>
@@ -108,7 +108,7 @@
         data(){
             return{
                 rental:{},
-                location:'',
+                location:{'id':"",'identifian':""},
                 Editfacture:{
                     'locataire':'', 'bien':'', 'debut':'', 'fin':'',
                     'avance':'', 'reste':'', 'total':'', 'fait_le':'', 'description':'',
@@ -126,6 +126,7 @@
             axios.get('api/payment/'+ this.$route.params.id +'/edit' )
                 .then((response)=>{
                     this.Editfacture = response.data
+                    this.location = response.data.location
                     console.log(response.data)
                 })
         },
@@ -134,7 +135,7 @@
             editpayment(){
                 axios.patch('api/payment/' + this.Editfacture.id, {
                     locataire:this.Editfacture.locataire,
-                    location:this.location,
+                    location:this.location.id,
                     bien:this.Editfacture.bien,
                     debut:this.Editfacture.debut,
                     fin:this.Editfacture.fin,

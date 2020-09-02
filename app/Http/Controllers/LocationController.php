@@ -79,7 +79,7 @@ class LocationController extends Controller
      */
     public function show($id)
     {
-        $showlocation = Location::with('locataire', 'bien')->find($id);
+        $showlocation = Location::with('bailler','locataire', 'bien')->find($id);
 //        dd($showlocation);
         return response()->json($showlocation);
     }
