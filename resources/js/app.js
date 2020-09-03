@@ -16,7 +16,7 @@ Vue.use(VueMoment)
 
 window.Vue = require('vue');
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('add-tenant', require('./tenant/Tenants.vue').default);
 
 import Dashbord from './Version/Dashbord.vue';

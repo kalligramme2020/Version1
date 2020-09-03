@@ -3,52 +3,74 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card mt-5" >
-                    <div class="card-header">Facture de loyer</div>
+                    <div class="card-header text-white bg-info mb-1">
+                        <div class="row">
 
-                    <div class="card-body">
-                        <div class="row no-gutters ">
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <dl class="row pl-5 ">
-                                        <dt class="col-sm-5 mt-1">location</dt>
-                                        <dd class="col-sm-5 mt-1 text-primary">{{local.identifiant}}</dd>
-
-                                        <dt class="col-sm-5 mt-1">locataire</dt>
-                                        <dd class="col-sm-5 mt-1"></dd>
-
-
-                                        <dt class="col-sm-5 mt-1">bien</dt>
-                                        <dd class="col-sm-5 mt-1"></dd>
-
-                                        <dt class="col-sm-5 mt-1">avance</dt>
-                                        <dd class="col-sm-5 mt-1">{{invoice.avance}}  Fcfa</dd>
-
-                                        <dt class="col-sm-5 mt-1">reste</dt>
-                                        <dd class="col-sm-5 mt-1">{{invoice.reste}}  Fcfa</dd>
-
-                                        <dt class="col-sm-5 mt-1">total</dt>
-                                        <dd class="col-sm-5 mt-1">{{invoice.total}}  Fcfa</dd>
-
-                                        <dt class="col-sm-5 mt-1">fait le:</dt>
-                                        <dd class="col-sm-5 mt-1">{{invoice.fait_le}} </dd>
-
-                                        <div class="c-callout c-callout-warning b-t-1 b-r-1 b-b-1">
-                                            <small class="text-muted">description</small><br>
-                                            <strong class="h6">{{invoice.description}}</strong>
-                                        </div>
-                                    </dl>
-                                </div>
+                            <div class="col">
+                                <h2 class="card-title">Facture</h2>
+                                <div><i class="fas fa-coins fa-lg"></i></div>
                             </div>
+
+                            <div class="col  text-center">
+                            </div>
+
+                            <div class="col text-right">
+                                <span class="mb-2">Addresse</span>
+                                <span >ville region pays </span>
+                                <span >ville region pays </span>
+                                <span >email@gmail.com</span>
+                                <span class="mb-2">697535871</span>
+
+
+                            </div>
+
                         </div>
                     </div>
 
-                    <div class="card-footer">
-                        <router-link to="/payment" class="btn btn-info">Retour</router-link>
+                    <div class="card-body">
 
-                        <router-link :to="{ name: 'edit_payment', params: { id: invoice.id }}" class="btn btn-warning ml-2"> Modifier</router-link>
+                            <div class="row ">
+                                <div class="col order-last">
+                                    <h5 class="text-muted">Total</h5>
+                                    <h4 class="text-muted">12000 Fcfa</h4>
+                                </div>
 
-                        <button @click="deletetenant(tenant.id)" class="btn btn-danger ml-2">suprimer</button>
+                                <div class="col">
+                                    <h6 class="mt-2 mb-1 text-muted">identifiant de location</h6>
+                                    <h5 class="bt-5">{{local.identifiant}}</h5>
 
+                                </div>
+
+                                <div class="col order-first">
+                                    <h6 class="card-title text-muted" >Client</h6>
+                                        <p>
+                                            <span class="d-flex">email@gmail.com</span>
+                                            <span class="d-flex">numero</span>
+                                            <span class="d-flex">no-cni</span>
+                                            <span class="d-flex">names</span>
+                                        </p>
+                                </div>
+                            </div>
+
+                        <div class="dropdown-divider border-primary w-100 "></div>
+
+                        <dl class="row  mt-3">
+                            <dt class="col-sm-6">Avance</dt>
+                            <dd class="col-sm-6">{{invoice.avance}} CFA</dd>
+                            <dt class="col-sm-6 ">Reste</dt>
+                            <dd class="col-sm-6">{{invoice.reste}} CFA</dd>
+                            <dt class="col-sm-6">Total</dt>
+                            <dd class="col-sm-6">{{invoice.total}}  CFA</dd>
+                        </dl>
+
+                        <div class="alert alert-success" role="alert">
+                            <h5 class="alert-heading">Description</h5>
+                            <p class="mb-0">{{invoice.description}}</p>
+                        </div>
+                    </div>
+
+                    <div class="text-left ml-5">
+                        <p><span>fait le</span> : <span>{{invoice.fait_le}}</span></p>
                     </div>
 
                 </div>
@@ -72,7 +94,7 @@
             // console.log(this.$route.params.id)
             axios.get('api/payment/'+ this.$route.params.id)
                 .then((response)=>{
-                    // console.log(response.data)
+                    console.log(response.data)
                     this.invoice = response.data
                     this.local = response.data.location
                     // console.log(this.local)
@@ -103,6 +125,4 @@
     }
 </script>
 
-<style scoped>
 
-</style>
