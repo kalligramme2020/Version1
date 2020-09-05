@@ -7,13 +7,17 @@
                         <div class="row mx-lg-n5">
                             <div class="col py-3 px-lg-5 border bg-light">
                                 <div class="form-control">
-                                    <input class="hidden" @change="imageChange" type="file" name="images " ref="files" multiple />
+<!--                                    <input class="hidden" @change="imageChange" type="file" name="images " ref="files" multiple />-->
+                                    <input type="file" id="file"  @change="GetImage" multiple/>
+
+
+
                                 </div>
 
-                                <div class="m-auto">
-                                    <p v-for="(image, index) in image" :key="index" >
-                                        {{image.name}}
-                                    </p>
+                                <div class="m-auto preview">
+<!--                                    <p v-for="(image, index) in image" :key="index" >-->
+<!--                                        {{image.name}}-->
+<!--                                    </p>-->
                                 </div>
 
                             </div>
@@ -27,7 +31,7 @@
                                 <div class="form-group">
                                     <label for="ex">location lier</label>
                                     <select class="form-control" id="ex" v-model="state.location" >
-                                        <option>1</option>
+                                        <option></option>
                                         <option v-for=" (rent ,index) in rental " :key="index" :value="rent.id" >{{rent.identifiant}}</option>
                                     </select>
                                 </div>
@@ -54,36 +58,40 @@
         created(){
             axios.get(' api/state/create')
                 .then((response)=>{
-                    console.log(response.data);
+                    // console.log(response.data);
                     this.rental = response.data;
                 })
         },
         methods:{
-            imageChange(){
-                for( let i = 0; i < this.$refs.files.files.length; i++){
-                    this.image.push(this.$refs.files.files[i]);
-                    // console.log(this.image);
+            GetImage(e){
+                var files = e.target.files ,
+                    filesLength = files.length ;
+                for (var i = 0; i < filesLength ; i++) {
+                    var f = files[i]
+                    var fileReader = new FileReader();
+                    fileReader.onload = (function(e) {
+                        var file = e.target;
+                        console.log(file.result)
+
+                        $("<img>",{
+                            class : "imageThumb ml-4",
+                            width : 100,
+                            src : e.target.result,
+                            title : file.name
+                        }).insertAfter(".preview");
+                    });
+                    fileReader.readAsDataURL(f);
                 }
             },
 
+
             AddImages(){
-                var self = this;
-                let formData = new FormData();
+                console.log(this.image)
 
-                for( let i = 0; i < this.image.length; i++){
-                    let file = self.image[i];
-                    formData.append('file['+ i + ']', file);
-
-                }
-
-                const config = {
-                    headers:{"content-type" : "multipart/form-data"}
-                };
-
-                axios.post('/api/state', formData)
+                axios.post('/api/state',{
+                    papa:this.image
+                })
                     .then(response => {
-                        self.$refs.files.value = "";
-                        self.image = [];
                         this.state.location="";
                         this.state.description=""
                     })
@@ -92,8 +100,11 @@
                     })
 
             }
-        },
+
+        }
     }
+
+
 
 </script>
 

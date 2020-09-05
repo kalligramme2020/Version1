@@ -9,9 +9,10 @@
 
 
 
+
                         <div class="jumbotron jumbotron-fluid">
                         <div class="container">
-                            <h1 class="display-4">Dashboaphprd</h1
+                            <h1 class="display-4">Dashboaphprd</h1>
                         </div>
                     </div>
                     </div>
@@ -24,7 +25,18 @@
 <script>
     export default {
         name: "Dashbord",
+        data(){
+            return{
+                date2:'', date1:''
+            }
+        },
 
+        computed:{
+            title(){
+                return new Date(1980, 6, 31);
+
+            }
+        }
     }
 </script>
 

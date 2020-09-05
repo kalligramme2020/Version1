@@ -46,10 +46,20 @@ import  show_payment from './payment/ShowPayment.vue';
 //gstion des e liieux
 import  etatlieux from './state/State.vue';
 import  newstate from './state/NewState.vue';
+//gzestion des users
+import user from './user/User';
+
 
 
 
 const routes = [
+
+    //Gestion ds user
+
+    {
+        path:"/profil",
+        component:user
+    },
 
     //GEstion des etats de lieux
     {

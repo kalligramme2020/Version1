@@ -77,6 +77,7 @@ class LocataireControler extends Controller
                 'numero' => $request['phone'],
                 'ville' => $request['ville'],
                 'profession' => $request['proff'],
+
                 'cni' => $request['cni'],
                 'nationalite' => $request['pays'],
             ]);

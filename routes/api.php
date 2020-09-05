@@ -30,6 +30,10 @@ Route::middleware('auth:api')->group(function () {
 
     Route::resource('state', 'EtatController');
 
+    Route::resource('profil', 'UserController');
+
+    Route::resource('password', 'Auth\PasswordController');
+
     Route::get('/pays', 'PaysController@getpays')->name('pays');
 
 });

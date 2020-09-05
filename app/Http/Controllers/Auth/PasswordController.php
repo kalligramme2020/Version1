@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Models\Etat;
-use App\Models\Location;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-class EtatController extends Controller
+class PasswordController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,16 +16,7 @@ class EtatController extends Controller
      */
     public function index()
     {
-
-        $states = Etat::all()->where('users_id', '==', Auth::id());
-        foreach ($states as $data){
-
-            $data->photo = json_decode($data->photo);
-        }
-
-        return response()->json($states);
-
-
+        //
     }
 
     /**
@@ -36,8 +26,7 @@ class EtatController extends Controller
      */
     public function create()
     {
-        $locations = Location::all()->where('users_id', '==', Auth::id());
-        return response()->json($locations);
+        //
     }
 
     /**
@@ -48,29 +37,33 @@ class EtatController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
-            $pictures = [];
-            foreach( $request->file('file') as $files ){
-
-                $filename = '/image/'.$files->getClientOriginalName();
-                $files->move(public_path('image'),$filename);
-                $pictures[] = $filename;
-            }
-
-        $desc = $request['description'];
-        $local = $request['location'];
-
-            $tore = Etat::create([
-
-                'description' => $desc,
-                    'location_id' =>$local,
-                    'users_id' => Auth::id(),
-                  'photo' => json_encode($pictures),
+        if (!(Hash::check($request->get('current'), Auth::user()->password))) {
+            // The passwords matches
+            return response()->json([
+                "error" => "Votre mots de passe actuel ne correspond pas a cellui que vous avez fourni. Veuillez réessayer."
             ]);
+        }
 
-            return response()->json(['message' => 'hfhfkshfhsjkhks']);
+        if(strcmp($request->get('current'), $request->get('new')) == 0){
+            //Current password and new password are same
+            return response()->json([
+                "error" => "le nouveu mots de passe doit etre different du precédent"
+            ]);
+        }
 
+        $validatedData = $request->validate([
+            'current' => 'required',
+            'new' => 'required|string|min:4|confirmed',
+        ]);
 
+        //Change Password
+        $user = Auth::user();
+        $user->password = bcrypt($request->get('new'));
+        $user->save();
+
+        return  response()->json([
+            "success" => "mots de passe changer avec succe !"
+        ]);
 
     }
 
@@ -116,10 +109,6 @@ class EtatController extends Controller
      */
     public function destroy($id)
     {
-        $etat = Etat::find($id);
-        $etat->delete();
-        return response()->json([
-            'message' => 'supprimer'
-        ]);
+        //
     }
 }

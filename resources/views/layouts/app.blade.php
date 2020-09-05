@@ -108,12 +108,12 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ Auth::user()->name }}
+                                    Mon compte
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">Action</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Mon compte</a>
+                                    <router-link to="/profil" class="dropdown-item"><i class="fas fa-user"></i> Mon compte</router-link>
                                     <div class="dropdown-divider"></div>
                                         <a class="dropdown-item text-danger" href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
