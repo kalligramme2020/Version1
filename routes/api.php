@@ -20,7 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::resource('tenants', 'LocataireControler');
+    Route::resource('tenants', 'LocataireControler')->parameters([
+        'Q' => 'Q?'
+    ]);
 
     Route::resource('bien', 'BienController');
 
@@ -35,5 +37,6 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('password', 'Auth\PasswordController');
 
     Route::get('/pays', 'PaysController@getpays')->name('pays');
+    Route::get('/searchT/{Q?}', 'PaysController@SearchTenant');
 
 });

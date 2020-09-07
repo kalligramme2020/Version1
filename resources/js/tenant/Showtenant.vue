@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 <template>
     <div class="container-fluid">
         <div class="container">
@@ -69,6 +70,8 @@
 </template>
 
 <script>
+    import Swal from 'sweetalert2'
+
     export default {
         name: "Showtenant",
 
@@ -96,23 +99,26 @@
             },
 
             deletetenant(id){
-                axios.delete('api/tenants/' + id)
-                    .then((response)=>{
-                        // console.log(response.data)
+                Swal.fire({
+                    text: "Etes-vous de cette action !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Abandonner',
+                    confirmButtonText: 'Oui, supprimer!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete('api/tenants/' + id)
+                            .then((response) => {
 
-                        if (response.data){
-                            this.flashMessage.success({
-                                title: 'Supprimer',
-                                message: 'Action reussit',
-                                time: 3000,
-                                flashMessageStyle: {
-                                    backgroundColor: 'linear-gradient(#e66465, #9198e5)'
-                                }
-                            });
-                        } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
-                        }
-                    })
+                            })
+                        Swal.fire(
+                            'Supprimer',
+                            'success'
+                        )
+                    }
+                })
             },
         },
     }

@@ -295,13 +295,13 @@
             },
 
             DeleteAccount(id){
-                axios.delete('api/password/' + id)
+                axios.delete('api/profil/' + id)
                     .then((response)=>{
                         this.tenants = response.data
                         if (response.data){
                             this.flashMessage.success({
                                 title: 'Supprimer',
-                                message: 'Action reussit',
+                                message: 'vous avez supprimer votre compte',
                                 time: 3050,
                                 flashMessageStyle: {
                                     backgroundColor: 'linear-gradient(#e66465, #9198e5)',

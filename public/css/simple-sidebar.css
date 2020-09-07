@@ -4,6 +4,12 @@
  * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/LICENSE)
  */
 
+.avatar {
+    vertical-align: middle;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
 #wrapper {
     overflow-x: hidden;
 }
@@ -78,5 +84,10 @@
     #wrapper.toggled #sidebar-wrapper {
         margin-left: -15rem;
     }
+
+
 }
+
+
+
 

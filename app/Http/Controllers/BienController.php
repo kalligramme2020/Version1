@@ -17,9 +17,10 @@ class BienController extends Controller
      */
     public function index()
     {
-//        $biens = Bien::with('pieces','parentid')->get()->where('users_id', '==', Auth::id());
+        $biens = Bien::with('pieces','parentid')->get()->where('users_id', '==', Auth::id());
 
-        $biens = Bien::all()->where('users_id', '==', Auth::id());
+//        $biens = Bien::all()->where('users_id', '==', Auth::id());
+//        $biens = Bien::paginate(1);
         return response()->json($biens);
     }
 

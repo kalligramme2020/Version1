@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 <template>
     <div id="content">
         <router-view></router-view>
@@ -85,6 +86,8 @@
 </template>
 
 <script>
+    import Swal from 'sweetalert2'
+
     export default {
         name: "Payment",
 
@@ -103,25 +106,28 @@
 
         methods:{
             deleteInvoice(id){
-                axios.delete('api/payment/' + id)
-                    .then((response)=>{
-                        // console.log(response.data)
+                Swal.fire({
+                    text: "Etes-vous de cette action !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Abandonner',
+                    confirmButtonText: 'Oui, supprimer!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete('api/payment/' + id)
+                            .then((response) => {
 
-                        if (response.data){
-                            this.flashMessage.success({
-                                title: 'Supprimer',
-                                message: 'Action reussit',
-                                time: 3000,
-                                flashMessageStyle: {
-                                    backgroundColor: 'linear-gradient(#e66465, #9198e5)'
-                                }
-                            });
-                        } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
-                        }
-                    })
+                            })
+                        Swal.fire(
+                            'Supprimer',
+                            'success'
+                        )
+                    }
+                })
             },
-        },
+        }
     }
 </script>
 

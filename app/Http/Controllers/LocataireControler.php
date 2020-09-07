@@ -22,7 +22,10 @@ class LocataireControler extends Controller
 
     public function index()
     {
-        return $this->refresh();
+//                $tenants = Locataire::where('users_id', '==', Auth::id())->orderBy('created_at','DESC')->paginate(5);
+            $tenants = Locataire::paginate(2);
+            return response()->json($tenants);
+
     }
 
     /**
@@ -46,7 +49,8 @@ class LocataireControler extends Controller
         $this->validate($request,[
             'nom' => 'required|min:3',
             'cni' => 'required|min:3','email','unique:users',
-            'email' => 'required|min:5'
+            'email' => 'required|min:5',
+            'phone' => 'required|min:9,max:9'
         ]);
 
         if ( $request->get('image')) {

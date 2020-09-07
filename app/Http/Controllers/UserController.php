@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -116,16 +117,12 @@ class UserController extends Controller
     public function destroy($id)
     {
 
-        $user = User::find(Auth::user()->id);
 
-        Auth::logout();
+        $account = User::find($id);
+        if(Auth::user()->id==$id) {
+            $account->delete();
 
-        if ($user->delete()) {
-
-            return Redirect::route('site-home')->with('global', 'Your account has been deleted!');
         }
-//        $account = User::find($id);
-//        $account->delete();
         return response()->json(['messsage' => 'vous venez de supprimer votre compte']);
     }
 }

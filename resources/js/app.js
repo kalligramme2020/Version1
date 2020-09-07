@@ -14,8 +14,13 @@ Vue.use(VueLazyload)
 import VueMoment from 'vue-moment'
 Vue.use(VueMoment)
 
-window.Vue = require('vue');
+import VueConfirmDialog from 'vue-confirm-dialog'
+Vue.use(VueConfirmDialog)
 
+
+window.Vue = require('vue');
+Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('add-tenant', require('./tenant/Tenants.vue').default);
 

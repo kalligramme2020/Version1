@@ -1,7 +1,9 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <FlashMessage></FlashMessage>
+
+            <div class="col-md-7">
                 <div class="card mt-5" >
                     <div class="card-header text-white bg-info mb-1">
                         <div class="row">
@@ -72,14 +74,17 @@
                     <div class="text-left ml-5">
                         <p><span>fait le</span> : <span>{{invoice.fait_le}}</span></p>
                     </div>
-
                 </div>
+                <button @click="deleteInvoice(invoice.id)" class="dropdown-item"> <i class="fas fa-trash-alt fa-sm"></i> suprimer</button>
+
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Swal from 'sweetalert2'
+
     export default {
         name: "ShowPayment",
 
@@ -101,27 +106,31 @@
                 });
         },
 
-        // methods:{
-        //     deletetenant(id){
-        //         axios.delete('api/tenants/' + id)
-        //             .then((response)=>{
-        //                 // console.log(response.data)
-        //
-        //                 if (response.data){
-        //                     this.flashMessage.success({
-        //                         title: 'Supprimer',
-        //                         message: 'Action reussit',
-        //                         time: 3000,
-        //                         flashMessageStyle: {
-        //                             backgroundColor: 'linear-gradient(#e66465, #9198e5)'
-        //                         }
-        //                     });
-        //                 } else {
-        //                     this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
-        //                 }
-        //             })
-        //     },
-        // },
+        methods:{
+            deleteInvoice(id){
+                Swal.fire({
+                    text: "Etes-vous de cette action !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Abandonner',
+                    confirmButtonText: 'Oui, supprimer!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete('api/payment/' + id)
+                            .then((response) => {
+
+                            })
+                        Swal.fire(
+                            'Supprimer',
+                            'success'
+                        )
+                    }
+                })
+
+            },
+        },
     }
 </script>
 

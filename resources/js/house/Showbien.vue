@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 <template>
     <div id="content">
         <div class="container-fluid">
@@ -19,14 +20,22 @@
                     <div class="col-md-4">
                         <img :src=" avatar(bien.photo) " alt="" width="100%" height="250">
 
-                        <div class="list-group-item list-group-item-accent-primary list-group-item-primary mt-5">
-                            <h5 class="card-title text-primary">description</h5>
-                            <p class="text-dark">
-                                {{bien.description}}
-                            </p>
+                            <ul class="list-group mt-4" @click="getparentBiendata(bienParent.id)" v-if="bienParent !== null">
+                                <a href="#" class="list-group-item pointer-event d-flex justify-content-between align-items-center">
+                                    {{bienParent.name}}
+                                    <span class="badge badge-primary badge-pill">Bien parent</span>
+                                </a>
+                            </ul>
+
+                        <div class="container mt-3 mb-3" v-if="bienParent === null" style="max-width: 18rem;">
+                            <h4> Sous bien</h4>
+                            <div class="list-group" v-for="enfant in bienenfant">
+                                <a class="list-group-item list-group-item-action" @click="getsoubiendata(enfant.id)" type="button">{{enfant.name}}</a>
+                            </div>
                         </div>
 
-                        <div class="card-header mt-5">
+
+                        <div class=" mt-5">
                             <router-link to="/bien" class="btn btn-info">Retour</router-link>
                             <router-link :to="{ name: 'editbien', params: { id: bien.id }}" class="btn btn-warning ml-2"> Modifier</router-link>
                             <button @click="deleteBien(bien.id)" class="btn btn-danger">suprimer</button>
@@ -38,12 +47,6 @@
 
                             <ul class="list-group list-group-flush" >
 
-                                 <li class="list-group-item" v-if="bienParent !== null">
-                                        <dl class="row pl-5">
-                                           <dt class="col-sm-6">appartient a</dt>
-                                            <dd class="col-sm-6 text-primary">{{bienParent.name}}</dd>
-                                        </dl>
-                                 </li>
                                 <li class="list-group-item">
                                     <dl class="row pl-5 ">
                                         <dt class="col-sm-6 ">type du bien</dt>
@@ -53,21 +56,11 @@
                                 <li class="list-group-item">
                                     <dl class="row pl-5 ">
                                         <dt class="col-sm-6 ">addresse</dt>
-                                        <dd class="col-sm-6 ">{{bien.addresse}}</dd>
+                                        <dd v-if="bien.parentid !== null" class="col-sm-6 ">{{bien.parentid.addresse}}</dd>
+                                        <dd v-else class="col-sm-6 ">{{bien.addresse}}</dd>
                                     </dl>
                                 </li>
-                                <li class="list-group-item">
-                                    <dl class="row pl-5 ">
-                                        <dt class="col-sm-6 ">ville</dt>
-                                        <dd class="col-sm-6 ">{{bien.ville}}</dd>
-                                    </dl>
-                                </li>
-                                <li class="list-group-item">
-                                    <dl class="row pl-5">
-                                        <dt class="col-sm-6">region</dt>
-                                        <dd class="col-sm-6">{{bien.region}}</dd>
-                                    </dl>
-                                </li>
+
 
                                 <div v-if="piece.chambre !== null && piece.salon != null && piece.salle_bain !== null ">
                                     <li class="list-group-item">
@@ -111,12 +104,12 @@
                                     </li>
                                 </div>
 
-                                <li class="list-group-item">
-                                    <dl class="pl-5 row" v-if="bienParent === null">
-                                             <dt class="col-sm-6">liste des biens de cette himeuble:</dt>
-                                            <dd class="col-sm-6 text-primary" v-for="enfant in bienenfant">{{enfant.name}}</dd>
-                                    </dl>
-                                </li>
+                                <div class="list-group-item list-group-item-accent-primary list-group-item-primary mt-5">
+                                    <h5 class="card-title text-primary">description</h5>
+                                    <p class="text-dark">
+                                        {{bien.description}}
+                                    </p>
+                                </div>
 
                             </ul>
 
@@ -130,6 +123,8 @@
 </template>
 
 <script>
+    import Swal from 'sweetalert2'
+
     export default {
         name: "Showbien",
 
@@ -155,31 +150,62 @@
 
         methods:{
 
+            getsoubiendata(id){
+                axios.get('api/bien/'+ id)
+                    .then((response)=>{
+                        this.bien = response.data
+                        this.tb = response.data.tbien
+                        this.pieces = response.data.pieces
+                        this.bienenfant = response.data.enfantsid
+                        this.bienParent = response.data.parentid
+                        console.log(response.data)
+                    });
+            },
+
+            getparentBiendata(id){
+                axios.get('api/bien/'+ id)
+                    .then((response)=>{
+                        this.bien = response.data
+                        this.tb = response.data.tbien
+                        this.pieces = response.data.pieces
+                        this.bienenfant = response.data.enfantsid
+                        this.bienParent = response.data.parentid
+                        console.log(response.data)
+                    });
+            },
+
             avatar(photo){
                 // console.log(photo)
                 return "image/" + photo
             },
 
             deleteBien(id){
-                axios.delete('api/bien/' + id)
-                    .then((response)=>{
-                        // console.log(response.data)
+                Swal.fire({
+                    text: "Etes-vous de cette action !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Abandonner',
+                    confirmButtonText: 'Oui, supprimer!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete('api/bien/' + id)
+                            .then((response) => {
 
-                        if (response.data){
-                            this.flashMessage.success({
-                                title: 'Supprimer',
-                                message: 'Action reussit',
-                                time: 3000,
-                                flashMessageStyle: {
-                                    backgroundColor: 'linear-gradient(#e66465, #9198e5)'
-                                }
-                            });
-                        } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
-                        }
-                    })
+                            })
+                        Swal.fire(
+                            'Supprimer',
+                            'success'
+                        )
+                    }
+                })
             },
         },
+
+        computed:{
+
+        }
     }
 </script>
 

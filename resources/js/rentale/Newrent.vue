@@ -84,7 +84,7 @@
 
                                 <div class="form-group col-md-4" >
 
-                                    <label for="ende">duree:<button  type="button" class=" btn-primary btn-xs">calculer</button></label>
+                                    <label for="ende">duree:<button @click="Date" class=" btn-primary btn-xs">calculer</button></label>
                                     <input type="text" class="form-control" id="ende" v-model="NewRent.duration">
                                 </div>
 
@@ -244,11 +244,13 @@
                     this.NewRent.paiement_date="", this.NewRent.garantir="", this.NewRent.garantir="",
                 )
             },
+
+            Date(){
+                console.log(this.NewRent.duration)
+
+            }
         },
 
-        computed: {
-
-        },
 
 
     }

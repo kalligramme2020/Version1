@@ -16,7 +16,7 @@
                     <div class="card-body">
 
                         <form enctype="multipart/form-data">
-                            
+
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="nom">Noms</label>
@@ -143,7 +143,8 @@
                                 position:top,
                             }
                         });
-                    } else {
+                    }
+                    else {
                         this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
                     }
                 })
