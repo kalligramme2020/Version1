@@ -4,7 +4,7 @@
             <FlashMessage></FlashMessage>
 
             <div class="col-md-7">
-                <div class="card mt-5" >
+                <div class="card mt-2" >
                     <div class="card-header text-white bg-info mb-1">
                         <div class="row">
 
@@ -75,7 +75,7 @@
                         <p><span>fait le</span> : <span>{{invoice.fait_le}}</span></p>
                     </div>
                 </div>
-                <button @click="deleteInvoice(invoice.id)" class="dropdown-item"> <i class="fas fa-trash-alt fa-sm"></i> suprimer</button>
+                <button @click="deleteInvoice(invoice.id)" class="dropdown-item text-danger"> <i class="fas fa-trash-alt fa-sm "></i> suprimer</button>
 
             </div>
         </div>

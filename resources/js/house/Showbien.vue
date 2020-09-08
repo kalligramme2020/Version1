@@ -5,7 +5,13 @@ import Swal from "sweetalert2";
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="card">
+
                         <div class="card-body">
+
+                            <div class="card text-center" v-if="loading">
+                                <h1><span class="fas fa-spinner fa-pulse"></span></h1>
+                            </div>
+
                             <div class=" mr-5 d-flex">
                                 <h4>details sur le bien</h4>:<h5 class="card-title text-primary">{{bien.name}}</h5>
                             </div>
@@ -30,7 +36,9 @@ import Swal from "sweetalert2";
                         <div class="container mt-3 mb-3" v-if="bienParent === null" style="max-width: 18rem;">
                             <h4> Sous bien</h4>
                             <div class="list-group" v-for="enfant in bienenfant">
-                                <a class="list-group-item list-group-item-action" @click="getsoubiendata(enfant.id)" type="button">{{enfant.name}}</a>
+                                <a class="list-group-item list-group-item-action" @click="getsoubiendata(enfant.id)" type="button">
+                                    {{enfant.name}} <i class=" float-right  fas fa-home fa-sm"></i>
+                                </a>
                             </div>
                         </div>
 
@@ -130,7 +138,12 @@ import Swal from "sweetalert2";
 
         data(){
             return{
-              bien:{}, bienParent:{}, bienenfant:{}, pieces:{}, tb:{},
+              bien:{},
+                bienParent:{},
+                bienenfant:{},
+                pieces:{},
+                tb:{},
+                loading: true,
             }
         },
 
@@ -139,12 +152,13 @@ import Swal from "sweetalert2";
             // console.log(this.$route.params.id)
             axios.get('api/bien/'+ this.$route.params.id)
                 .then((response)=>{
-                    this.bien = response.data
-                    this.tb = response.data.tbien
-                    this.pieces = response.data.pieces
-                    this.bienenfant = response.data.enfantsid
-                    this.bienParent = response.data.parentid
-                    console.log(response.data)
+                    this.bien = response.data;
+                    this.tb = response.data.tbien;
+                    this.pieces = response.data.pieces;
+                    this.bienenfant = response.data.enfantsid;
+                    this.bienParent = response.data.parentid;
+                    console.log(response.data);
+                    this.loading = false;
                 });
         },
 
@@ -153,11 +167,11 @@ import Swal from "sweetalert2";
             getsoubiendata(id){
                 axios.get('api/bien/'+ id)
                     .then((response)=>{
-                        this.bien = response.data
-                        this.tb = response.data.tbien
-                        this.pieces = response.data.pieces
-                        this.bienenfant = response.data.enfantsid
-                        this.bienParent = response.data.parentid
+                        this.bien = response.data;
+                        this.tb = response.data.tbien;
+                        this.pieces = response.data.pieces;
+                        this.bienenfant = response.data.enfantsid;
+                        this.bienParent = response.data.parentid;
                         console.log(response.data)
                     });
             },
@@ -165,11 +179,11 @@ import Swal from "sweetalert2";
             getparentBiendata(id){
                 axios.get('api/bien/'+ id)
                     .then((response)=>{
-                        this.bien = response.data
-                        this.tb = response.data.tbien
-                        this.pieces = response.data.pieces
-                        this.bienenfant = response.data.enfantsid
-                        this.bienParent = response.data.parentid
+                        this.bien = response.data;
+                        this.tb = response.data.tbien;
+                        this.pieces = response.data.pieces;
+                        this.bienenfant = response.data.enfantsid;
+                        this.bienParent = response.data.parentid;
                         console.log(response.data)
                     });
             },
@@ -193,7 +207,7 @@ import Swal from "sweetalert2";
                         axios.delete('api/bien/' + id)
                             .then((response) => {
 
-                            })
+                            });
                         Swal.fire(
                             'Supprimer',
                             'success'
@@ -203,9 +217,6 @@ import Swal from "sweetalert2";
             },
         },
 
-        computed:{
-
-        }
     }
 </script>
 

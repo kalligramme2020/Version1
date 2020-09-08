@@ -17,7 +17,9 @@ class LocationController extends Controller
      */
     public function index()
     {
-        $locations = Location::with('bien','locataire')->get()->where('users_id', '==', Auth::id());
+        $locations = Location::with('bien','locataire')
+            ->where('users_id', '=', Auth::id())
+            ->paginate(2);
 //        dd($locations);
         return response()->json($locations);
     }

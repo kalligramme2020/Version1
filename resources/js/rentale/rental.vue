@@ -5,7 +5,11 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
+
                             <FlashMessage class="flashmessage"></FlashMessage>
+                            <div class="card text-center" v-if="loading">
+                                <h1><span class="fas fa-spinner fa-pulse"></span></h1>
+                            </div>
 
                         </div>
                     </div>
@@ -15,9 +19,19 @@
 
             <div class="row justify-content-center mt-5">
                 <div class="col-md-11">
-                    <div class="text-right mb-3">
-                        <router-link to="/newrent" class="btn btn-outline-success text-success">Nouvel location </router-link>
+
+                    <div class="row">
+                        <div class="col-6  ">
+
+                            <div class="input-group col-md-6 mb-3">
+                                <input type="text" class="form-control" v-model="keyword" placeholder="Recherche">
+                            </div>
+                        </div>
+                        <div class="col-6 text-right">
+                            <router-link to="/newrent" class="btn btn-outline-success text-success">Nouvel location </router-link>
+                        </div>
                     </div>
+
                     <div class="card">
                         <div class="card-header"></div>
                         <div class="card-body">
@@ -37,7 +51,7 @@
                                 <tr>
                                     <td><router-link :to="{ name: 'showrent', params: { id: location.id }}" class="text-primary">{{location.identifiant}}</router-link></td>
                                     <td>
-                                        <router-link :to="{ name: 'showtenant', params: { id: location.bien.id }}" >{{location.bien.name}}</router-link>
+                                        <router-link :to="{ name: 'showbien', params: { id: location.bien_id }}" >{{location.bien.name}}</router-link>
                                     </td>
                                     <td class="text-primary">
                                         <router-link :to="{ name: 'showtenant', params: { id: location.locataire.id }}" >{{location.locataire.nom}}</router-link>
@@ -66,6 +80,9 @@
                                 </tr>
                                 </tbody>
                             </table>
+
+                            <pagination :data="metalocations" @pagination-change-page="getResultsPaginate" class="mt-3"></pagination>
+
                         </div>
                     </div>
                 </div>
@@ -81,15 +98,18 @@
         name: "rental",
         data(){
             return{
-                locations:{},
+                metalocations:{},
+                loading:true,
+                keyword:null
             }
         },
 
         created() {
             axios.get('api/rentale')
             .then((response)=>{
-                // console.log(response.data)
-                this.locations = response.data
+                console.log(response.data);
+                this.metalocations = response.data;
+               this.loading = false
             })
 
         },
@@ -117,7 +137,27 @@
                     }
                 })
             },
+
+            // Our method to GET results from a Laravel endpoint
+            getResultsPaginate(page = 1) {
+                axios.get('api/rentale?page=' + page)
+                    .then(response => {
+                        this.metalocations = response.data;
+                    });
+            },
         },
+
+        computed: {
+            locations(){
+                if (this.keyword)
+                    return this.metalocations.data.filter(({identifiant}) => {
+                        return identifiant.toLowerCase().includes(this.keyword.toLowerCase())
+                            // || prenom.toLowerCase().includes(this.keyword.toLowerCase())
+                    });
+                else
+                    return this.metalocations.data;
+            }
+        }
 
     }
 </script>

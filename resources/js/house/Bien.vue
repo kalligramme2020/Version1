@@ -20,8 +20,13 @@ import Swal from "sweetalert2";
                 <div class="col-md-11">
                     <div class="row">
                         <div class="col-6  ">
+
+                            <div class="card text-center" v-if="loading">
+                                <h1><span class="fas fa-spinner fa-pulse"></span></h1>
+                            </div>
+
                             <div class="input-group col-md-6 mb-3">
-                                <input type="text" class="form-control"  v-model="Q" placeholder="Recherche">
+                                <input type="text" class="form-control"  v-model="keyword" placeholder="Recherche">
 
                             </div>
                         </div>
@@ -45,7 +50,7 @@ import Swal from "sweetalert2";
                                 </tr>
                                 </thead>
 
-                                <tbody v-for=" bien in Biens" v-bind:key="bien.id">
+                                <tbody v-for=" bien in biens" :key="bien.id">
                                 <tr>
 
                                     <td>
@@ -81,7 +86,7 @@ import Swal from "sweetalert2";
 
                                 </tbody>
                             </table>
-<!--                            <pagination :data="Biens" @pagination-change-page="getResultsPaginate" class="mt-3"></pagination>-->
+                            <pagination :data="metaBiens" @pagination-change-page="getResultsPaginate" class="mt-3"></pagination>
 
                         </div>
                     </div>
@@ -100,8 +105,10 @@ import Swal from "sweetalert2";
 
         data(){
             return{
-                Biens:{},
-                Q:''
+                metaBiens:{},
+                keyword:null,
+                loading: true,
+
             }
         },
 
@@ -109,8 +116,10 @@ import Swal from "sweetalert2";
         created(){
             axios.get('api/bien')
                 .then((response)=>{
-                    console.log(response.data)
-                    this.Biens = response.data
+                    console.log(response.data);
+                    this.metaBiens = response.data;
+                    this.loading = false;
+
                 })
         },
 
@@ -146,18 +155,22 @@ import Swal from "sweetalert2";
 
             // Our method to GET results from a Laravel endpoint
             getResultsPaginate(page = 1) {
-                // axios.get('api/bien?page=' + page)
-                //     .then(response => {
-                //         this.Biens = response.data;
-                //     });
+                axios.get('api/bien?page=' + page)
+                    .then(response => {
+                        this.metaBiens = response.data;
+                    });
             },
         },
 
         computed:{
-            getFilterBiens() {
-                return this.Biens.filter(bien => {
-                    return bien.indentifiant.toLowerCase().includes(this.Q.toLowerCase())
-                })
+            biens(){
+                if (this.keyword)
+                    return this.metaBiens.data.filter(({name}) => {
+                        return name.toLowerCase().includes(this.keyword.toLowerCase())
+                            // || prenom.toLowerCase().includes(this.keyword.toLowerCase())
+                    });
+                else
+                    return this.metaBiens.data;
             }
         }
     }

@@ -17,10 +17,8 @@ class BienController extends Controller
      */
     public function index()
     {
-        $biens = Bien::with('pieces','parentid')->get()->where('users_id', '==', Auth::id());
-
-//        $biens = Bien::all()->where('users_id', '==', Auth::id());
-//        $biens = Bien::paginate(1);
+        $biens = Bien::with('parentid')->where('users_id', '=', Auth::id())
+            ->paginate(2);
         return response()->json($biens);
     }
 
@@ -31,7 +29,9 @@ class BienController extends Controller
      */
     public function create()
     {
-        //
+        $biens = Bien::with('parentid')->get()->where('users_id', '==', Auth::id());
+
+        return response()->json($biens);
     }
 
     /**

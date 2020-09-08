@@ -19,9 +19,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Paiement::with('location')->get()->where('bailleur' , '==' ,Auth::id());
-
-//        dd($payments);
+        $payments = Paiement::with('location')->where('bailleur' , '=' ,Auth::id())->paginate(2);
         return response()->json($payments);
     }
 

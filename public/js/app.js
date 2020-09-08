@@ -2065,13 +2065,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Bien.vue",
   data: function data() {
     return {
-      Biens: {},
-      Q: ''
+      metaBiens: {},
+      keyword: null,
+      loading: true
     };
   },
   created: function created() {
@@ -2079,7 +2085,8 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('api/bien').then(function (response) {
       console.log(response.data);
-      _this.Biens = response.data;
+      _this.metaBiens = response.data;
+      _this.loading = false;
     });
   },
   methods: {
@@ -2104,21 +2111,23 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     // Our method to GET results from a Laravel endpoint
-    getResultsPaginate: function getResultsPaginate() {// axios.get('api/bien?page=' + page)
-      //     .then(response => {
-      //         this.Biens = response.data;
-      //     });
+    getResultsPaginate: function getResultsPaginate() {
+      var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get('api/bien?page=' + page).then(function (response) {
+        _this2.metaBiens = response.data;
+      });
     }
   },
   computed: {
-    getFilterBiens: function getFilterBiens() {
-      var _this2 = this;
+    biens: function biens() {
+      var _this3 = this;
 
-      return this.Biens.filter(function (bien) {
-        return bien.indentifiant.toLowerCase().includes(_this2.Q.toLowerCase());
-      });
+      if (this.keyword) return this.metaBiens.data.filter(function (_ref) {
+        var name = _ref.name;
+        return name.toLowerCase().includes(_this3.keyword.toLowerCase()); // || prenom.toLowerCase().includes(this.keyword.toLowerCase())
+      });else return this.metaBiens.data;
     }
   }
 });
@@ -2295,7 +2304,8 @@ __webpack_require__.r(__webpack_exports__);
         'ville': "",
         'addresse': "",
         'name': "",
-        'parent_id': ""
+        'parent_id': "",
+        'id': ''
       },
       bienParent: {},
       profil: null,
@@ -2343,9 +2353,9 @@ __webpack_require__.r(__webpack_exports__);
       _this.tb = response.data.tbien;
       _this.city = response.data.countrie;
       _this.pieces = response.data.pieces;
-      console.log(_this.edithouse);
+      console.log(response.data);
     });
-    axios.get('api/bien').then(function (response) {
+    axios.get('api/bien/create').then(function (response) {
       _this.bienParent = response.data; // console.log(this.bienParent)
     });
   },
@@ -2363,7 +2373,6 @@ __webpack_require__.r(__webpack_exports__);
       reader.readAsDataURL(image);
 
       reader.onload = function (e) {
-        // console.log(e)
         _this2.profil = e.target.result;
       };
     },
@@ -2571,6 +2580,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Newbien",
   data: function data() {
@@ -2598,8 +2612,11 @@ __webpack_require__.r(__webpack_exports__);
       },
       profil: null,
       countries: "",
-      bienParent: {},
-      typeBiens: ""
+      bienParent: {
+        'id': ''
+      },
+      typeBiens: "",
+      loading: true
     };
   },
   created: function created() {
@@ -2608,9 +2625,13 @@ __webpack_require__.r(__webpack_exports__);
     axios.get('api/pays').then(function (response) {
       _this.countries = response.data.land;
       _this.typeBiens = response.data.peol; // console.log( this.country, this.typeBiens)
+
+      _this.loading = false;
     });
-    axios.get('api/bien').then(function (response) {
-      _this.bienParent = response.data; // console.log(this.bienParent)
+    axios.get('api/bien/create').then(function (response) {
+      _this.bienParent = response.data;
+      console.log(_this.bienParent);
+      _this.loading = false;
     });
   },
   methods: {
@@ -2810,6 +2831,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Showbien",
@@ -2819,7 +2848,8 @@ __webpack_require__.r(__webpack_exports__);
       bienParent: {},
       bienenfant: {},
       pieces: {},
-      tb: {}
+      tb: {},
+      loading: true
     };
   },
   created: function created() {
@@ -2833,6 +2863,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.bienenfant = response.data.enfantsid;
       _this.bienParent = response.data.parentid;
       console.log(response.data);
+      _this.loading = false;
     });
   },
   methods: {
@@ -2880,8 +2911,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     }
-  },
-  computed: {}
+  }
 });
 
 /***/ }),
@@ -3350,20 +3380,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Payment",
   data: function data() {
     return {
-      invoice: {}
+      metainvoice: {},
+      keyword: null,
+      loading: true
     };
   },
   created: function created() {
     var _this = this;
 
     axios.get('api/payment').then(function (response) {
-      console.log(response.data);
-      _this.invoice = response.data;
+      // console.log(response.data);
+      _this.metainvoice = response.data;
+      _this.loading = false;
     });
   },
   methods: {
@@ -3382,6 +3425,25 @@ __webpack_require__.r(__webpack_exports__);
           sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire('Supprimer', 'success');
         }
       });
+    },
+    // Our method to GET results from a Laravel endpoint
+    getResultsPaginate: function getResultsPaginate() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get('api/payment?page=' + page).then(function (response) {
+        _this2.metainvoice = response.data;
+      });
+    }
+  },
+  computed: {
+    invoices: function invoices() {
+      var _this3 = this;
+
+      if (this.keyword) return this.meatainvoice.data.filter(function (_ref) {
+        var identifiant = _ref.identifiant;
+        return identifiant.toLowerCase().includes(_this3.keyword.toLowerCase());
+      });else return this.metainvoice.data;
     }
   }
 });
@@ -3804,8 +3866,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
+//
 //
 //
 //
@@ -3987,15 +4050,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Newrent",
   data: function data() {
-    var _NewRent;
-
     return {
-      NewRent: (_NewRent = {
+      NewRent: {
         'bienlouer': "",
         'locataire_id': "",
         'identifiant': "",
-        'typebail': ""
-      }, _defineProperty(_NewRent, "bienlouer", ""), _defineProperty(_NewRent, 'residence2', ""), _defineProperty(_NewRent, 'residence1', ""), _defineProperty(_NewRent, 'activite', ""), _defineProperty(_NewRent, 'debutb', ""), _defineProperty(_NewRent, 'finb', ""), _defineProperty(_NewRent, "locataire_id", ""), _defineProperty(_NewRent, 'loyerac', ""), _defineProperty(_NewRent, 'loyerhc', ""), _defineProperty(_NewRent, 'charge', ""), _defineProperty(_NewRent, 'paiement_date', ""), _defineProperty(_NewRent, 'garantir', ""), _defineProperty(_NewRent, 'description', ""), _defineProperty(_NewRent, 'duration', ""), _NewRent),
+        'typebail': "",
+        'residence2': "",
+        'residence1': "",
+        'activite': "",
+        'debutb': "",
+        'finb': "",
+        'loyerac': "",
+        'loyerhc': "",
+        'charge': "",
+        'paiement_date': "",
+        'garantir': "",
+        'description': "",
+        'duration': ""
+      },
+      loading: true,
       biens: "",
       locataires: "" //liste des bien et locataire
 
@@ -4007,6 +4081,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     axios.get('api/rentale/create').then(function (response) {
       _this.biens = response.data.biens;
       _this.locataires = response.data.locataires; // console.log(this.locataires)
+
+      _this.loading = false;
     });
   },
   methods: {
@@ -4294,20 +4370,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "rental",
   data: function data() {
     return {
-      locations: {}
+      metalocations: {},
+      loading: true,
+      keyword: null
     };
   },
   created: function created() {
     var _this = this;
 
     axios.get('api/rentale').then(function (response) {
-      // console.log(response.data)
-      _this.locations = response.data;
+      console.log(response.data);
+      _this.metalocations = response.data;
+      _this.loading = false;
     });
   },
   methods: {
@@ -4326,6 +4422,25 @@ __webpack_require__.r(__webpack_exports__);
           sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire('Supprimer', 'success');
         }
       });
+    },
+    // Our method to GET results from a Laravel endpoint
+    getResultsPaginate: function getResultsPaginate() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get('api/rentale?page=' + page).then(function (response) {
+        _this2.metalocations = response.data;
+      });
+    }
+  },
+  computed: {
+    locations: function locations() {
+      var _this3 = this;
+
+      if (this.keyword) return this.metalocations.data.filter(function (_ref) {
+        var identifiant = _ref.identifiant;
+        return identifiant.toLowerCase().includes(_this3.keyword.toLowerCase()); // || prenom.toLowerCase().includes(this.keyword.toLowerCase())
+      });else return this.metalocations.data;
     }
   }
 });
@@ -4805,12 +4920,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Showtenant",
   data: function data() {
     return {
-      tenant: {}
+      tenant: {},
+      loading: true
     };
   },
   created: function created() {
@@ -4820,6 +4938,7 @@ __webpack_require__.r(__webpack_exports__);
     axios.get('api/tenants/' + this.$route.params.id).then(function (response) {
       console.log(response.data);
       _this.tenant = response.data;
+      _this.loading = false;
     });
   },
   methods: {
@@ -4949,13 +5068,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Tenants",
   data: function data() {
     return {
-      Tenants: {},
-      Q: ""
+      loading: true,
+      metaTenant: null,
+      keyword: null
     };
   },
   created: function created() {
@@ -4963,7 +5086,8 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('api/tenants').then(function (response) {
       console.log(response.data);
-      _this.Tenants = response.data;
+      _this.metaTenant = response.data;
+      _this.loading = false;
     });
   },
   methods: {
@@ -4993,17 +5117,19 @@ __webpack_require__.r(__webpack_exports__);
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       axios.get('api/tenants?page=' + page).then(function (response) {
-        _this2.Tenants = response.data;
+        _this2.metaTenant = response.data;
       });
     }
   },
   computed: {
-    filteredList: function filteredList() {
+    tenants: function tenants() {
       var _this3 = this;
 
-      return this.Tenants.filter(function (tenants) {
-        return tenants.includes(_this3.Q.toLowerCase());
-      });
+      if (this.keyword) return this.metaTenant.data.filter(function (_ref) {
+        var nom = _ref.nom,
+            prenom = _ref.prenom;
+        return nom.toLowerCase().includes(_this3.keyword.toLowerCase()) || prenom.toLowerCase().includes(_this3.keyword.toLowerCase());
+      });else return this.metaTenant.data;
     }
   }
 });
@@ -47548,25 +47674,29 @@ var render = function() {
         _c("div", { staticClass: "col-md-11" }, [
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-6  " }, [
+              _vm.loading
+                ? _c("div", { staticClass: "card text-center" }, [_vm._m(1)])
+                : _vm._e(),
+              _vm._v(" "),
               _c("div", { staticClass: "input-group col-md-6 mb-3" }, [
                 _c("input", {
                   directives: [
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.Q,
-                      expression: "Q"
+                      value: _vm.keyword,
+                      expression: "keyword"
                     }
                   ],
                   staticClass: "form-control",
                   attrs: { type: "text", placeholder: "Recherche" },
-                  domProps: { value: _vm.Q },
+                  domProps: { value: _vm.keyword },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.Q = $event.target.value
+                      _vm.keyword = $event.target.value
                     }
                   }
                 })
@@ -47593,136 +47723,149 @@ var render = function() {
           _c("div", { staticClass: "text-right mb-3" }),
           _vm._v(" "),
           _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-body" }, [
-              _c(
-                "table",
-                {
-                  staticClass: "table table-striped table-bordered",
-                  staticStyle: { width: "100%" }
-                },
-                [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _vm._l(_vm.Biens, function(bien) {
-                    return _c("tbody", { key: bien.id }, [
-                      _c("tr", [
-                        _c("td", [
-                          _c("img", {
-                            staticClass: "avatar",
-                            attrs: { src: _vm.avatar(bien.photo), alt: "" }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "td",
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                staticClass: "text-primary",
-                                attrs: {
-                                  to: {
-                                    name: "showbien",
-                                    params: { id: bien.id }
+            _c(
+              "div",
+              { staticClass: "card-body" },
+              [
+                _c(
+                  "table",
+                  {
+                    staticClass: "table table-striped table-bordered",
+                    staticStyle: { width: "100%" }
+                  },
+                  [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _vm._l(_vm.biens, function(bien) {
+                      return _c("tbody", { key: bien.id }, [
+                        _c("tr", [
+                          _c("td", [
+                            _c("img", {
+                              staticClass: "avatar",
+                              attrs: { src: _vm.avatar(bien.photo), alt: "" }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  staticClass: "text-primary",
+                                  attrs: {
+                                    to: {
+                                      name: "showbien",
+                                      params: { id: bien.id }
+                                    }
                                   }
-                                }
-                              },
-                              [_vm._v(_vm._s(bien.name))]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        bien.parentid !== null
-                          ? _c("td", [_vm._v(_vm._s(bien.parentid.addresse))])
-                          : _c("td", [_vm._v(_vm._s(bien.addresse))]),
-                        _vm._v(" "),
-                        bien.parentid !== null
-                          ? _c("td", [_vm._v(_vm._s(bien.parentid.ville))])
-                          : _c("td", [_vm._v(_vm._s(bien.ville))]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-center" }, [
-                          _c("div", { staticClass: "btn-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-secondary btn-sm ",
-                                attrs: {
-                                  type: "button",
-                                  "data-toggle": "dropdown",
-                                  "aria-expanded": "false"
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                                actions\n                                            "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "dropdown-menu" },
-                              [
-                                _c(
-                                  "router-link",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    attrs: {
-                                      to: {
-                                        name: "editbien",
-                                        params: { id: bien.id }
+                                },
+                                [_vm._v(_vm._s(bien.name))]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          bien.parentid !== null
+                            ? _c("td", [_vm._v(_vm._s(bien.parentid.addresse))])
+                            : _c("td", [_vm._v(_vm._s(bien.addresse))]),
+                          _vm._v(" "),
+                          bien.parentid !== null
+                            ? _c("td", [_vm._v(_vm._s(bien.parentid.ville))])
+                            : _c("td", [_vm._v(_vm._s(bien.ville))]),
+                          _vm._v(" "),
+                          _c("th", { staticClass: "text-center" }, [
+                            _c("div", { staticClass: "btn-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-secondary btn-sm ",
+                                  attrs: {
+                                    type: "button",
+                                    "data-toggle": "dropdown",
+                                    "aria-expanded": "false"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                                actions\n                                            "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "dropdown-menu" },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass: "dropdown-item",
+                                      attrs: {
+                                        to: {
+                                          name: "editbien",
+                                          params: { id: bien.id }
+                                        }
                                       }
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fas fa-edit fa-sm"
-                                    }),
-                                    _vm._v(" modifier")
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.deleteBien(bien.id)
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-edit fa-sm"
+                                      }),
+                                      _vm._v(" modifier")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "dropdown-item",
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deleteBien(bien.id)
+                                        }
                                       }
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fas fa-trash-alt fa-sm"
-                                    }),
-                                    _vm._v(" suprimer")
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "dropdown-divider" }),
-                                _vm._v(" "),
-                                _c(
-                                  "a",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    attrs: { href: "#" }
-                                  },
-                                  [_vm._v("Autres")]
-                                )
-                              ],
-                              1
-                            )
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-trash-alt fa-sm"
+                                      }),
+                                      _vm._v(" suprimer")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("div", {
+                                    staticClass: "dropdown-divider"
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "dropdown-item",
+                                      attrs: { href: "#" }
+                                    },
+                                    [_vm._v("Autres")]
+                                  )
+                                ],
+                                1
+                              )
+                            ])
                           ])
                         ])
                       ])
-                    ])
-                  })
-                ],
-                2
-              )
-            ])
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c("pagination", {
+                  staticClass: "mt-3",
+                  attrs: { data: _vm.metaBiens },
+                  on: { "pagination-change-page": _vm.getResultsPaginate }
+                })
+              ],
+              1
+            )
           ])
         ])
       ])
@@ -47745,6 +47888,12 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticStyle: { "z-index": "1000" } })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
   },
   function() {
     var _vm = this
@@ -48565,6 +48714,10 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container-fluid" }, [
+    _vm.loading
+      ? _c("div", { staticClass: "card text-center" }, [_vm._m(0)])
+      : _vm._e(),
+    _vm._v(" "),
     _c("div", { staticClass: "page-header text-center" }, [
       _c("h4", [_vm._v(" Nouveau bien")]),
       _vm._v(" "),
@@ -48783,7 +48936,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group col-md-6" }, [
-                  _vm._m(0),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c(
                     "select",
@@ -49293,6 +49446,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "pays" } }, [
       _vm._v("pays "),
       _c("i", {
@@ -49332,6 +49491,10 @@ var render = function() {
           _c("div", { staticClass: "col-md-12" }, [
             _c("div", { staticClass: "card" }, [
               _c("div", { staticClass: "card-body" }, [
+                _vm.loading
+                  ? _c("div", { staticClass: "card text-center" }, [_vm._m(0)])
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("div", { staticClass: " mr-5 d-flex" }, [
                   _c("h4", [_vm._v("details sur le bien")]),
                   _vm._v(":"),
@@ -49417,7 +49580,16 @@ var render = function() {
                                   }
                                 }
                               },
-                              [_vm._v(_vm._s(enfant.name))]
+                              [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(enfant.name) +
+                                    " "
+                                ),
+                                _c("i", {
+                                  staticClass: " float-right  fas fa-home fa-sm"
+                                })
+                              ]
                             )
                           ])
                         })
@@ -49610,7 +49782,14 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
+  }
+]
 render._withStripped = true
 
 
@@ -50371,201 +50550,239 @@ var render = function() {
                 "div",
                 { staticClass: "card-body" },
                 [
-                  _vm._v(
-                    "\n                        This is some text within a card body.\n                        "
-                  ),
                   _c("FlashMessage"),
                   _vm._v(" "),
-                  _c("div", { staticClass: "float-right " }, [
-                    _c("div", { staticClass: "dropdown" }, [
-                      _vm._m(0),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "dropdown-menu",
-                          attrs: { "aria-labelledby": "dropdownMenu2" }
-                        },
-                        [
-                          _c(
-                            "router-link",
-                            {
-                              staticClass: "dropdown-item text-primary",
-                              attrs: { to: "/newpayment" }
-                            },
-                            [
-                              _c("i", {
-                                staticClass: "fa fa-eur",
-                                attrs: { "aria-hidden": "true" }
-                              }),
-                              _vm._v(" ajouter un revenue")
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "dropdown-item",
-                              attrs: { type: "button" }
-                            },
-                            [_vm._v("Another action")]
-                          )
-                        ],
-                        1
-                      )
-                    ])
-                  ])
+                  _vm.loading
+                    ? _c("div", { staticClass: "card text-center" }, [
+                        _vm._m(0)
+                      ])
+                    : _vm._e()
                 ],
                 1
-              ),
-              _vm._v(" "),
-              _c("div", { staticStyle: { "z-index": "1000" } })
+              )
             ])
           ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "row justify-content-center mt-5" }, [
           _c("div", { staticClass: "col-md-11" }, [
-            _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-header" }),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-6  " }, [
+                _c("div", { staticClass: "input-group col-md-6 mb-3" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.keyword,
+                        expression: "keyword"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "Recherche" },
+                    domProps: { value: _vm.keyword },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.keyword = $event.target.value
+                      }
+                    }
+                  })
+                ])
+              ]),
               _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c(
-                  "table",
-                  { staticClass: "table table-bordered" },
-                  [
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _vm._l(_vm.invoice, function(inv) {
-                      return _c("tbody", [
-                        _c("tr", [
-                          _c(
-                            "td",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  staticClass: "text-primary",
-                                  attrs: {
-                                    to: {
-                                      name: "show_payment",
-                                      params: { id: inv.id }
+              _c("div", { staticClass: "col-6 text-right" }, [
+                _c("div", { staticClass: "dropdown" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "dropdown-menu",
+                      attrs: { "aria-labelledby": "dropdownMenu2" }
+                    },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "dropdown-item text-primary",
+                          attrs: { to: "/newpayment" }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "fa fa-eur",
+                            attrs: { "aria-hidden": "true" }
+                          }),
+                          _vm._v(" ajouter un revenue")
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "dropdown-item",
+                          attrs: { type: "button" }
+                        },
+                        [_vm._v("Another action")]
+                      )
+                    ],
+                    1
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card" }, [
+              _c(
+                "div",
+                { staticClass: "card-body" },
+                [
+                  _c(
+                    "table",
+                    { staticClass: "table table-bordered" },
+                    [
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _vm._l(_vm.invoices, function(inv) {
+                        return _c("tbody", [
+                          _c("tr", [
+                            _c(
+                              "td",
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "text-primary",
+                                    attrs: {
+                                      to: {
+                                        name: "show_payment",
+                                        params: { id: inv.id }
+                                      }
                                     }
-                                  }
-                                },
-                                [_vm._v(_vm._s(inv.location.identifiant))]
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(inv.avance))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(inv.reste))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(inv.total))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(inv.fait_le))]),
-                          _vm._v(" "),
-                          _c("th", { staticClass: "text-center" }, [
-                            _c("div", { staticClass: "btn-group" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-secondary btn-sm ",
-                                  attrs: {
-                                    type: "button",
-                                    "data-toggle": "dropdown",
-                                    "aria-expanded": "false"
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                            actions\n                                        "
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "dropdown-menu" },
-                                [
-                                  _c(
-                                    "router-link",
-                                    {
-                                      staticClass: "dropdown-item",
-                                      attrs: {
-                                        to: {
-                                          name: "edit_payment",
-                                          params: { id: inv.id }
+                                  },
+                                  [_vm._v(_vm._s(inv.location.identifiant))]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(inv.avance))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(inv.reste))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(inv.total))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(inv.fait_le))]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-center" }, [
+                              _c("div", { staticClass: "btn-group" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-secondary btn-sm ",
+                                    attrs: {
+                                      type: "button",
+                                      "data-toggle": "dropdown",
+                                      "aria-expanded": "false"
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                            actions\n                                        "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "dropdown-menu" },
+                                  [
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass: "dropdown-item",
+                                        attrs: {
+                                          to: {
+                                            name: "edit_payment",
+                                            params: { id: inv.id }
+                                          }
                                         }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fas fa-edit fa-sm"
-                                      }),
-                                      _vm._v(" modifier")
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "router-link",
-                                    {
-                                      staticClass: "dropdown-item",
-                                      attrs: { to: "/newpayment" }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fa fa-eur",
-                                        attrs: { "aria-hidden": "true" }
-                                      }),
-                                      _vm._v(" ajout finances")
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "dropdown-item",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.deleteInvoice(inv.id)
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fas fa-edit fa-sm"
+                                        }),
+                                        _vm._v(" modifier")
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass: "dropdown-item",
+                                        attrs: { to: "/newpayment" }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fa fa-eur",
+                                          attrs: { "aria-hidden": "true" }
+                                        }),
+                                        _vm._v(" ajout finances")
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "dropdown-item",
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.deleteInvoice(inv.id)
+                                          }
                                         }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fas fa-trash-alt fa-sm"
-                                      }),
-                                      _vm._v(" suprimer")
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("div", {
-                                    staticClass: "dropdown-divider"
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass: "dropdown-item",
-                                      attrs: { href: "#" }
-                                    },
-                                    [_vm._v("Autres")]
-                                  )
-                                ],
-                                1
-                              )
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fas fa-trash-alt fa-sm"
+                                        }),
+                                        _vm._v(" suprimer")
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass: "dropdown-divider"
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "a",
+                                      {
+                                        staticClass: "dropdown-item",
+                                        attrs: { href: "#" }
+                                      },
+                                      [_vm._v("Autres")]
+                                    )
+                                  ],
+                                  1
+                                )
+                              ])
                             ])
                           ])
                         ])
-                      ])
-                    })
-                  ],
-                  2
-                )
-              ])
+                      })
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _c("pagination", {
+                    staticClass: "mt-3",
+                    attrs: { data: _vm.metainvoice },
+                    on: { "pagination-change-page": _vm.getResultsPaginate }
+                  })
+                ],
+                1
+              )
             ])
           ])
         ])
@@ -50575,6 +50792,12 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -50592,7 +50815,7 @@ var staticRenderFns = [
         }
       },
       [
-        _vm._v("\n                                    Nouvel transaction "),
+        _vm._v("\n                                Nouvel transaction "),
         _c("i", {
           staticClass: "fa fa-chevron-down",
           attrs: { "aria-hidden": "true" }
@@ -50650,7 +50873,7 @@ var render = function() {
         _c("FlashMessage"),
         _vm._v(" "),
         _c("div", { staticClass: "col-md-7" }, [
-          _c("div", { staticClass: "card mt-5" }, [
+          _c("div", { staticClass: "card mt-2" }, [
             _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
@@ -50724,7 +50947,7 @@ var render = function() {
           _c(
             "button",
             {
-              staticClass: "dropdown-item",
+              staticClass: "dropdown-item text-danger",
               on: {
                 click: function($event) {
                   return _vm.deleteInvoice(_vm.invoice.id)
@@ -50732,7 +50955,7 @@ var render = function() {
               }
             },
             [
-              _c("i", { staticClass: "fas fa-trash-alt fa-sm" }),
+              _c("i", { staticClass: "fas fa-trash-alt fa-sm " }),
               _vm._v(" suprimer")
             ]
           )
@@ -51571,7 +51794,11 @@ var render = function() {
     [
       _c("FlashMessage", { staticClass: "flashmessage" }),
       _vm._v(" "),
-      _vm._m(0),
+      _vm.loading
+        ? _c("div", { staticClass: "card text-center" }, [_vm._m(0)])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._m(1),
       _vm._v(" "),
       _c("div", { staticClass: "dropdown-divider" }),
       _vm._v(" "),
@@ -52215,11 +52442,11 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(1),
-              _vm._v(" "),
               _vm._m(2),
               _vm._v(" "),
               _vm._m(3),
+              _vm._v(" "),
+              _vm._m(4),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
                 _c("div", { staticClass: "form-group col-md-8" }, [
@@ -52287,6 +52514,12 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -52545,7 +52778,25 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(0)
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "card text-center" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("\n                    Etats des lieux\n                ")
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card border-success" }, [
+            _c("div", { staticClass: "card-body" }, [
+              _c("h6", { staticClass: "card-title text-left text-muted" }, [
+                _vm._v("Description:")
+              ]),
+              _vm._v(" "),
+              _c("p", [_vm._v(_vm._s(_vm.rent.description))])
+            ])
+          ])
+        ])
+      ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "card mt-4 " }, [
@@ -52580,39 +52831,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "card text-center" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _vm._v("\n                    Etats des lieux\n                ")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c("h5", { staticClass: "card-title" }, [
-            _vm._v("Special title treatment")
-          ]),
-          _vm._v(" "),
-          _c("p", { staticClass: "card-text" }, [
-            _vm._v(
-              "It's a broader card with text below as a natural lead-in to extra content. This content is a little longer."
-            )
-          ]),
-          _vm._v(" "),
-          _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-            _vm._v("Go somewhere")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card border-success" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("h6", { staticClass: "card-title text-left text-muted" }, [
-              _vm._v("Description:")
-            ]),
-            _vm._v(
-              "\n                        This is some text within a card body.\n                    "
-            )
-          ])
-        ])
-      ])
+    return _c("div", { staticClass: "card-body" }, [
+      _c("h5", { staticClass: "card-title" }),
+      _vm._v(" "),
+      _c("p", { staticClass: "card-text" }),
+      _vm._v(" "),
+      _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } })
     ])
   }
 ]
@@ -52645,7 +52869,13 @@ var render = function() {
             _c(
               "div",
               { staticClass: "card-body" },
-              [_c("FlashMessage", { staticClass: "flashmessage" })],
+              [
+                _c("FlashMessage", { staticClass: "flashmessage" }),
+                _vm._v(" "),
+                _vm.loading
+                  ? _c("div", { staticClass: "card text-center" }, [_vm._m(0)])
+                  : _vm._e()
+              ],
               1
             )
           ])
@@ -52654,188 +52884,229 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "row justify-content-center mt-5" }, [
         _c("div", { staticClass: "col-md-11" }, [
-          _c(
-            "div",
-            { staticClass: "text-right mb-3" },
-            [
-              _c(
-                "router-link",
-                {
-                  staticClass: "btn btn-outline-success text-success",
-                  attrs: { to: "/newrent" }
-                },
-                [_vm._v("Nouvel location ")]
-              )
-            ],
-            1
-          ),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-6  " }, [
+              _c("div", { staticClass: "input-group col-md-6 mb-3" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.keyword,
+                      expression: "keyword"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", placeholder: "Recherche" },
+                  domProps: { value: _vm.keyword },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.keyword = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-6 text-right" },
+              [
+                _c(
+                  "router-link",
+                  {
+                    staticClass: "btn btn-outline-success text-success",
+                    attrs: { to: "/newrent" }
+                  },
+                  [_vm._v("Nouvel location ")]
+                )
+              ],
+              1
+            )
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c(
-                "table",
-                { staticClass: "table table-bordered" },
-                [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _vm._l(_vm.locations, function(location) {
-                    return _c("tbody", { key: location.id }, [
-                      _c("tr", [
-                        _c(
-                          "td",
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                staticClass: "text-primary",
-                                attrs: {
-                                  to: {
-                                    name: "showrent",
-                                    params: { id: location.id }
-                                  }
-                                }
-                              },
-                              [_vm._v(_vm._s(location.identifiant))]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "td",
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                attrs: {
-                                  to: {
-                                    name: "showtenant",
-                                    params: { id: location.bien.id }
-                                  }
-                                }
-                              },
-                              [_vm._v(_vm._s(location.bien.name))]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "td",
-                          { staticClass: "text-primary" },
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                attrs: {
-                                  to: {
-                                    name: "showtenant",
-                                    params: { id: location.locataire.id }
-                                  }
-                                }
-                              },
-                              [_vm._v(_vm._s(location.locataire.nom))]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(location.loyer_hc))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(
-                            _vm._s(location.debut_bail) +
-                              " - " +
-                              _vm._s(location.fin_bail)
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-center" }, [
-                          _c("div", { staticClass: "btn-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-secondary btn-sm  ",
-                                attrs: {
-                                  type: "button",
-                                  "data-toggle": "dropdown",
-                                  "aria-expanded": "false"
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                            actions\n                                        "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "dropdown-menu" },
-                              [
-                                _c(
-                                  "router-link",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    attrs: {
-                                      to: {
-                                        name: "editrent",
-                                        params: { id: location.id }
-                                      }
+            _c(
+              "div",
+              { staticClass: "card-body" },
+              [
+                _c(
+                  "table",
+                  { staticClass: "table table-bordered" },
+                  [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _vm._l(_vm.locations, function(location) {
+                      return _c("tbody", { key: location.id }, [
+                        _c("tr", [
+                          _c(
+                            "td",
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  staticClass: "text-primary",
+                                  attrs: {
+                                    to: {
+                                      name: "showrent",
+                                      params: { id: location.id }
                                     }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fas fa-edit fa-sm"
-                                    }),
-                                    _vm._v(" modifier")
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _vm._m(1, true),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.deleteRent(location.id)
-                                      }
+                                  }
+                                },
+                                [_vm._v(_vm._s(location.identifiant))]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  attrs: {
+                                    to: {
+                                      name: "showbien",
+                                      params: { id: location.bien_id }
                                     }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fas fa-trash-alt fa-sm"
-                                    }),
-                                    _vm._v(" suprimer")
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "dropdown-divider" }),
-                                _vm._v(" "),
-                                _c(
-                                  "a",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    attrs: { href: "#" }
-                                  },
-                                  [_vm._v("Autres")]
-                                )
-                              ],
-                              1
+                                  }
+                                },
+                                [_vm._v(_vm._s(location.bien.name))]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            { staticClass: "text-primary" },
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  attrs: {
+                                    to: {
+                                      name: "showtenant",
+                                      params: { id: location.locataire.id }
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(location.locataire.nom))]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(location.loyer_hc))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              _vm._s(location.debut_bail) +
+                                " - " +
+                                _vm._s(location.fin_bail)
                             )
+                          ]),
+                          _vm._v(" "),
+                          _c("th", { staticClass: "text-center" }, [
+                            _c("div", { staticClass: "btn-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-secondary btn-sm  ",
+                                  attrs: {
+                                    type: "button",
+                                    "data-toggle": "dropdown",
+                                    "aria-expanded": "false"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                            actions\n                                        "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "dropdown-menu" },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass: "dropdown-item",
+                                      attrs: {
+                                        to: {
+                                          name: "editrent",
+                                          params: { id: location.id }
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-edit fa-sm"
+                                      }),
+                                      _vm._v(" modifier")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._m(2, true),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "dropdown-item",
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deleteRent(location.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-trash-alt fa-sm"
+                                      }),
+                                      _vm._v(" suprimer")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("div", {
+                                    staticClass: "dropdown-divider"
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "dropdown-item",
+                                      attrs: { href: "#" }
+                                    },
+                                    [_vm._v("Autres")]
+                                  )
+                                ],
+                                1
+                              )
+                            ])
                           ])
                         ])
                       ])
-                    ])
-                  })
-                ],
-                2
-              )
-            ])
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c("pagination", {
+                  staticClass: "mt-3",
+                  attrs: { data: _vm.metalocations },
+                  on: { "pagination-change-page": _vm.getResultsPaginate }
+                })
+              ],
+              1
+            )
           ])
         ])
       ])
@@ -52843,6 +53114,12 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -53468,6 +53745,10 @@ var render = function() {
     _c("div", { staticClass: "container" }, [
       _c("div", { staticClass: "row justify-content-center mt-5" }, [
         _c("div", { staticClass: "card mb-3 col-md-12" }, [
+          _vm.loading
+            ? _c("div", { staticClass: "card text-center" }, [_vm._m(0)])
+            : _vm._e(),
+          _vm._v(" "),
           _c("div", { staticClass: "row no-gutters " }, [
             _c("div", { staticClass: "col-md-4 border-right" }, [
               _c("img", {
@@ -53595,7 +53876,14 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
+  }
+]
 render._withStripped = true
 
 
@@ -53635,19 +53923,19 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.Q,
-                          expression: "Q"
+                          value: _vm.keyword,
+                          expression: "keyword"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { type: "text", placeholder: "Recherche" },
-                      domProps: { value: _vm.Q },
+                      domProps: { value: _vm.keyword },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.Q = $event.target.value
+                          _vm.keyword = $event.target.value
                         }
                       }
                     })
@@ -53677,154 +53965,160 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("div", { staticClass: "card" }, [
-            _c(
-              "div",
-              { staticClass: "card-body" },
-              [
-                _c(
-                  "table",
-                  {
-                    staticClass: "table table-striped table-bordered",
-                    staticStyle: { width: "100%" },
-                    attrs: { id: "example" }
-                  },
+            _vm.loading
+              ? _c("div", { staticClass: "card text-center" }, [_vm._m(1)])
+              : _c(
+                  "div",
+                  { staticClass: "card-body" },
                   [
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _vm._l(_vm.Tenants.data, function(tenant) {
-                      return _c("tbody", { key: _vm.Tenants.id }, [
-                        _c("tr", [
-                          _vm._m(2, true),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("img", {
-                              staticClass: "avatar",
-                              attrs: { src: _vm.avatar(tenant.photo), alt: "" }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  staticClass: "text-primary",
+                    _c(
+                      "table",
+                      {
+                        staticClass: "table table-striped table-bordered",
+                        staticStyle: { width: "100%" },
+                        attrs: { id: "example" }
+                      },
+                      [
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _vm._l(_vm.tenants, function(tenant) {
+                          return _c("tbody", { key: tenant.id }, [
+                            _c("tr", [
+                              _vm._m(3, true),
+                              _vm._v(" "),
+                              _c("td", [
+                                _c("img", {
+                                  staticClass: "avatar",
                                   attrs: {
-                                    to: {
-                                      name: "showtenant",
-                                      params: { id: tenant.id }
-                                    }
+                                    src: _vm.avatar(tenant.photo),
+                                    alt: ""
                                   }
-                                },
-                                [
-                                  _vm._v(
-                                    _vm._s(tenant.nom) +
-                                      " " +
-                                      _vm._s(tenant.prenom)
-                                  )
-                                ]
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(tenant.email))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(tenant.numero))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(tenant.cni))]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("div", { staticClass: "btn-group" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-secondary btn-sm ",
-                                  attrs: {
-                                    type: "button",
-                                    "data-toggle": "dropdown",
-                                    "aria-expanded": "false"
-                                  }
-                                },
-                                [_vm._v("actions ")]
-                              ),
+                                })
+                              ]),
                               _vm._v(" "),
                               _c(
-                                "div",
-                                { staticClass: "dropdown-menu" },
+                                "td",
                                 [
                                   _c(
                                     "router-link",
                                     {
-                                      staticClass: "dropdown-item",
+                                      staticClass: "text-primary",
                                       attrs: {
                                         to: {
-                                          name: "edit",
+                                          name: "showtenant",
                                           params: { id: tenant.id }
                                         }
                                       }
                                     },
                                     [
-                                      _c("i", {
-                                        staticClass: "fas fa-edit fa-sm"
-                                      }),
-                                      _vm._v(" modifier")
+                                      _vm._v(
+                                        _vm._s(tenant.nom) +
+                                          " " +
+                                          _vm._s(tenant.prenom)
+                                      )
                                     ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "dropdown-item",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.deleteTenant(tenant.id)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fas fa-trash-alt fa-sm"
-                                      }),
-                                      _vm._v(" suprimer")
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("vue-confirm-dialog"),
-                                  _vm._v(" "),
-                                  _c("div", {
-                                    staticClass: "dropdown-divider"
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass: "dropdown-item",
-                                      attrs: { href: "#" }
-                                    },
-                                    [_vm._v("Autres")]
                                   )
                                 ],
                                 1
-                              )
+                              ),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(tenant.email))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(tenant.numero))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(tenant.cni))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _c("div", { staticClass: "btn-group" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-secondary btn-sm ",
+                                      attrs: {
+                                        type: "button",
+                                        "data-toggle": "dropdown",
+                                        "aria-expanded": "false"
+                                      }
+                                    },
+                                    [_vm._v("actions ")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "dropdown-menu" },
+                                    [
+                                      _c(
+                                        "router-link",
+                                        {
+                                          staticClass: "dropdown-item",
+                                          attrs: {
+                                            to: {
+                                              name: "edit",
+                                              params: { id: tenant.id }
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fas fa-edit fa-sm"
+                                          }),
+                                          _vm._v(" modifier")
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass: "dropdown-item",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.deleteTenant(tenant.id)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fas fa-trash-alt fa-sm"
+                                          }),
+                                          _vm._v(" suprimer")
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("vue-confirm-dialog"),
+                                      _vm._v(" "),
+                                      _c("div", {
+                                        staticClass: "dropdown-divider"
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "a",
+                                        {
+                                          staticClass: "dropdown-item",
+                                          attrs: { href: "#" }
+                                        },
+                                        [_vm._v("Autres")]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ])
+                              ])
                             ])
                           ])
-                        ])
-                      ])
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("pagination", {
+                      staticClass: "mt-3",
+                      attrs: { data: _vm.metaTenant },
+                      on: { "pagination-change-page": _vm.getResultsPaginate }
                     })
                   ],
-                  2
-                ),
-                _vm._v(" "),
-                _c("pagination", {
-                  staticClass: "mt-3",
-                  attrs: { data: _vm.Tenants },
-                  on: { "pagination-change-page": _vm.getResultsPaginate }
-                })
-              ],
-              1
-            )
+                  1
+                )
           ])
         ])
       ])
@@ -53845,6 +54139,12 @@ var staticRenderFns = [
         ])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
   },
   function() {
     var _vm = this

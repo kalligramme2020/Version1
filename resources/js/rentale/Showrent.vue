@@ -82,16 +82,16 @@
                       Etats des lieux
                   </div>
                   <div class="card-body">
-                      <h5 class="card-title">Special title treatment</h5>
-                      <p class="card-text">It's a broader card with text below as a natural lead-in to extra content. This content is a little longer.</p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                      <h5 class="card-title"></h5>
+                      <p class="card-text"></p>
+                      <a href="#" class="btn btn-primary"></a>
                   </div>
 
 
                   <div class="card border-success">
                       <div class="card-body">
                           <h6 class="card-title text-left text-muted">Description:</h6>
-                          This is some text within a card body.
+                          <p>{{rent.description}}</p>
                       </div>
                   </div>
 

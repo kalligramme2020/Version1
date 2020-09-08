@@ -157,7 +157,7 @@
             return{
                 edithouse:{
                     'description':"",'surface':"", 'region':"", 'bain':"",
-                    'pays':"", 'ville':"",'addresse':"", 'name':"",'parent_id':"",
+                    'pays':"", 'ville':"",'addresse':"", 'name':"",'parent_id':"", 'id':''
                 },
                 bienParent:{},
                 profil:null,
@@ -178,21 +178,21 @@
             // console.log(this.$route.params.id)
             axios.get('api/pays')
                 .then((response )=> {
-                    this.countries= response.data.land
+                    this.countries= response.data.land;
                     this.typeBiens= response.data.peol
                 });
 
             axios.get('api/bien/'+ this.$route.params.id +'/edit' )
                 .then((response)=>{
-                    this.edithouse = response.data
-                    this.tb = response.data.tbien
-                    this.city = response.data.countrie
-                    this.pieces = response.data.pieces
-                    console.log(this.edithouse)
+                    this.edithouse = response.data;
+                    this.tb = response.data.tbien;
+                    this.city = response.data.countrie;
+                    this.pieces = response.data.pieces;
+                    console.log(response.data)
 
                 });
 
-            axios.get('api/bien')
+            axios.get('api/bien/create')
                 .then((response)=>{
                     this.bienParent = response.data
                     // console.log(this.bienParent)
@@ -208,11 +208,10 @@
 
             GetImage(e){
                 // console.log(e.target.files)
-                let image = e.target.files[0]
+                let image = e.target.files[0];
                 let reader = new FileReader();
                 reader.readAsDataURL(image);
                 reader.onload = e => {
-                    // console.log(e)
                     this.profil = e.target.result
                 }
             },

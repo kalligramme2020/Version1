@@ -7,23 +7,11 @@ import Swal from "sweetalert2";
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            This is some text within a card body.
                             <FlashMessage></FlashMessage>
-                            <div class="float-right ">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-secondary" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Nouvel transaction <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                        <router-link to="/newpayment" class="dropdown-item text-primary"><i class="fa fa-eur" aria-hidden="true"></i> ajouter un revenue</router-link>
-                                        <button class="dropdown-item" type="button">Another action</button>
-                                    </div>
-                                </div>
+                            <div class="card text-center" v-if="loading">
+                                <h1><span class="fas fa-spinner fa-pulse"></span></h1>
                             </div>
                         </div>
-
-                        <div style="z-index: 1000"> </div>
-
 
                     </div>
                 </div>
@@ -32,8 +20,26 @@ import Swal from "sweetalert2";
 
             <div class="row justify-content-center mt-5">
                 <div class="col-md-11">
+                    <div class="row">
+                        <div class="col-6  ">
+
+                            <div class="input-group col-md-6 mb-3">
+                                <input type="text" class="form-control" v-model="keyword" placeholder="Recherche">
+                            </div>
+                        </div>
+                        <div class="col-6 text-right">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Nouvel transaction <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <router-link to="/newpayment" class="dropdown-item text-primary"><i class="fa fa-eur" aria-hidden="true"></i> ajouter un revenue</router-link>
+                                    <button class="dropdown-item" type="button">Another action</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card">
-                        <div class="card-header"></div>
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead class=" text-center">
@@ -47,7 +53,7 @@ import Swal from "sweetalert2";
 
                                 </tr>
                                 </thead>
-                                <tbody v-for="inv in invoice">
+                                <tbody v-for="inv in invoices">
                                 <tr>
                                     <td>
                                         <router-link :to="{ name: 'show_payment', params: { id: inv.id }}" class="text-primary">{{inv.location.identifiant}}</router-link>
@@ -76,6 +82,10 @@ import Swal from "sweetalert2";
                                 </tbody>
 
                             </table>
+
+                            <pagination :data="metainvoice" @pagination-change-page="getResultsPaginate" class="mt-3"></pagination>
+
+
                         </div>
                     </div>
                 </div>
@@ -93,14 +103,17 @@ import Swal from "sweetalert2";
 
         data(){
             return  {
-                invoice:{},
+                metainvoice:{},
+                keyword:null,
+                loading:true
             }
         },
         created(){
             axios.get('api/payment')
                 .then((response)=>{
-                    console.log(response.data)
-                    this.invoice = response.data
+                    // console.log(response.data);
+                    this.metainvoice = response.data;
+                    this.loading = false;
                 })
         },
 
@@ -119,7 +132,7 @@ import Swal from "sweetalert2";
                         axios.delete('api/payment/' + id)
                             .then((response) => {
 
-                            })
+                            });
                         Swal.fire(
                             'Supprimer',
                             'success'
@@ -127,6 +140,26 @@ import Swal from "sweetalert2";
                     }
                 })
             },
+
+            // Our method to GET results from a Laravel endpoint
+            getResultsPaginate(page = 1) {
+                axios.get('api/payment?page=' + page)
+                    .then(response => {
+                        this.metainvoice = response.data;
+                    });
+            },
+
+        },
+
+        computed: {
+            invoices(){
+                if (this.keyword)
+                    return this.meatainvoice.data.filter(({identifiant}) => {
+                        return identifiant.toLowerCase().includes(this.keyword.toLowerCase())
+                    });
+                else
+                    return this.metainvoice.data;
+            }
         }
     }
 </script>

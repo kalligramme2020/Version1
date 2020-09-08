@@ -1,6 +1,9 @@
 <template>
     <div class="container-fluid">
         <FlashMessage class="flashmessage"></FlashMessage>
+        <div class="card text-center" v-if="loading">
+            <h1><span class="fas fa-spinner fa-pulse"></span></h1>
+        </div>
 
         <div class = "page-header text-center">
             <h4> Nouvel location.</h4>
@@ -183,22 +186,24 @@
         data(){
             return{
               NewRent:{
-                  'bienlouer':"", 'locataire_id':"", 'identifiant':"", 'typebail':"",'bienlouer':"",
-                  'residence2':"", 'residence1':"", 'activite':"",'debutb':"" , 'finb':"",'locataire_id':"",
+                  'bienlouer':"", 'locataire_id':"", 'identifiant':"", 'typebail':"",
+                  'residence2':"", 'residence1':"", 'activite':"",'debutb':"" , 'finb':"",
                   'loyerac':"", 'loyerhc':"",'charge':"", 'paiement_date':"", 'garantir':"",
                   'description':"", 'duration':"",
               },
-
-                biens:"", locataires:"" , //liste des bien et locataire
+                loading:true,
+                biens:"",
+                locataires:"" , //liste des bien et locataire
             }
         },
 
         created(){
             axios.get('api/rentale/create')
                 .then((response)=>{
-                    this.biens = response.data.biens
-                    this.locataires = response.data.locataires
+                    this.biens = response.data.biens;
+                    this.locataires = response.data.locataires;
                     // console.log(this.locataires)
+                    this.loading = false
 
                 })
         },

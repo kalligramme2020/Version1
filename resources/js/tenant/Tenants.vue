@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="col-6  ">
                                 <div class="input-group col-md-6 mb-3">
-                                    <input type="text" class="form-control" v-model="Q" placeholder="Recherche">
+                                    <input type="text" class="form-control" v-model="keyword" placeholder="Recherche">
 
                                 </div>
                             </div>
@@ -35,7 +35,10 @@
 
                     </div>
                     <div class="card">
-                        <div class="card-body" >
+                        <div class="card text-center" v-if="loading">
+                            <h1><span class="fas fa-spinner fa-pulse"></span></h1>
+                        </div>
+                        <div class="card-body" v-else>
                             <table id="example" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                 <tr>
@@ -48,7 +51,7 @@
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
-                                <tbody v-for=" tenant in Tenants.data" v-bind:key="Tenants.id">
+                                <tbody v-for=" tenant in tenants" :key="tenant.id">
                                 <tr>
                                     <td><input type="checkbox" name=""></td>
                                     <td>
@@ -77,7 +80,7 @@
                                 </tbody>
                             </table>
 
-                            <pagination :data="Tenants" @pagination-change-page="getResultsPaginate" class="mt-3"></pagination>
+                            <pagination :data="metaTenant" @pagination-change-page="getResultsPaginate" class="mt-3"></pagination>
 
                         </div>
                     </div>
@@ -97,8 +100,9 @@
 
         data(){
             return{
-                Tenants:{},
-                Q:"",
+                loading: true,
+                metaTenant: null,
+                keyword: null,
             }
         },
 
@@ -106,8 +110,9 @@
         created(){
             axios.get('api/tenants')
                 .then((response)=>{
-                    console.log(response.data)
-                    this.Tenants = response.data
+                    console.log(response.data);
+                    this.metaTenant = response.data;
+                    this.loading = false;
                 })
         },
 
@@ -145,17 +150,21 @@
             getResultsPaginate(page = 1) {
                 axios.get('api/tenants?page=' + page)
                     .then(response => {
-                        this.Tenants = response.data;
+                        this.metaTenant = response.data;
                     });
             },
 
         },
 
         computed: {
-            filteredList(){
-                return this.Tenants.filter(tenants => {
-                    return tenants.includes(this.Q.toLowerCase())
-                })
+            tenants(){
+                if (this.keyword)
+                    return this.metaTenant.data.filter(({nom, prenom}) => {
+                        return nom.toLowerCase().includes(this.keyword.toLowerCase())
+                            || prenom.toLowerCase().includes(this.keyword.toLowerCase())
+                    });
+                else
+                    return this.metaTenant.data;
             }
         }
     }

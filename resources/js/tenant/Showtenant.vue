@@ -4,7 +4,9 @@ import Swal from "sweetalert2";
         <div class="container">
             <div class="row justify-content-center mt-5">
                 <div class="card mb-3 col-md-12">
-
+                    <div class="card text-center" v-if="loading">
+                        <h1><span class="fas fa-spinner fa-pulse"></span></h1>
+                    </div>
                     <div class="row no-gutters ">
                         <div class="col-md-4 border-right">
                             <img :src=" avatar(tenant.photo) " alt="" width="250">
@@ -77,7 +79,8 @@ import Swal from "sweetalert2";
 
         data(){
             return{
-                tenant:{}
+                tenant:{},
+                loading: true,
             }
         },
 
@@ -88,6 +91,8 @@ import Swal from "sweetalert2";
                 .then((response)=>{
                     console.log(response.data)
                     this.tenant = response.data
+                    this.loading = false;
+
                 });
         },
 

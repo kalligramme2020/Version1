@@ -1,5 +1,10 @@
 <template>
     <div class="container-fluid">
+
+        <div class="card text-center" v-if="loading">
+            <h1><span class="fas fa-spinner fa-pulse"></span></h1>
+        </div>
+
         <div class = "page-header text-center">
             <h4> Nouveau bien</h4>
             <div style="z-index:2000"> <FlashMessage></FlashMessage></div>
@@ -151,18 +156,33 @@
         data(){
             return{
                 newHouse:{
-                    'cuisine':"", 'bain':"",'salon':"",'chambre':"",
-                    'studio':"",'meuble':"", 'magasin':"",'bienParent':"",'typebien':"",
-                    'banquet':"", 'appart':'','description':"",'surface':"", 'region':"",
-                    'pays':"", 'ville':"",'addresse':"", 'name':"",'parent_id':""
+                    'cuisine':"",
+                    'bain':"",
+                    'salon':"",
+                    'chambre':"",
+                    'studio':"",
+                    'meuble':"",
+                    'magasin':"",
+                    'bienParent':"",
+                    'typebien':"",
+                    'banquet':"",
+                    'appart':'',
+                    'description':"",
+                    'surface':"",
+                    'region':"",
+                    'pays':"",
+                    'ville':"",
+                    'addresse':"",
+                    'name':"",
+                    'parent_id':""
                 },
                 profil: null,
-
                 countries:"",
-                bienParent:{},
+                bienParent:{
+                    'id':''
+                },
                 typeBiens:"",
-
-
+                loading:true
 
             }
         },
@@ -170,16 +190,19 @@
         created() {
             axios.get('api/pays')
                 .then((response )=> {
-                    this.countries= response.data.land
-                    this.typeBiens= response.data.peol
+                    this.countries= response.data.land;
+                    this.typeBiens= response.data.peol;
                     // console.log( this.country, this.typeBiens)
+                    this.loading = false
                 });
 
-            axios.get('api/bien')
+            axios.get('api/bien/create')
                 .then((response)=>{
-                    this.bienParent = response.data
-                    // console.log(this.bienParent)
-                })
+                    this.bienParent = response.data;
+                    console.log(this.bienParent)
+                    this.loading = false
+
+                });
         },
 
 
@@ -189,7 +212,7 @@
             GetImage(e){
                 // console.log(e.target.files)
 
-                let image = e.target.files[0]
+                let image = e.target.files[0];
                 let reader = new FileReader();
                 reader.readAsDataURL(image);
                 reader.onload = e => {

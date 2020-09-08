@@ -22,8 +22,10 @@ class LocataireControler extends Controller
 
     public function index()
     {
-//                $tenants = Locataire::where('users_id', '==', Auth::id())->orderBy('created_at','DESC')->paginate(5);
-            $tenants = Locataire::paginate(2);
+                $tenants = Locataire::where('users_id', '=', Auth::id())
+                    ->orderBy('created_at','DESC')
+                    ->paginate(2);
+
             return response()->json($tenants);
 
     }
