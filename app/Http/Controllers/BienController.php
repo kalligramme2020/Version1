@@ -74,7 +74,7 @@ class BienController extends Controller
 
                 'bien_id' => $request['Parent_id'],
                 'users_id' => Auth::id(),
-                'type_bien_id' => $request['typeB'],
+                'type_bien_id' => $request['typebien'],
                 'name' => $request['name'],
                 'pays_id' => $request['pays'],
                 'ville' => $request['ville'],

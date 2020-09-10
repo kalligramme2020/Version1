@@ -2,7 +2,6 @@
     <div class="container-fluid">
         <div class = "page-header text-center">
             <h4> Modifier ce bien</h4>
-            <div style="z-index:2000"> <FlashMessage></FlashMessage></div>
 
         </div>
         <div class="dropdown-divider"></div>
@@ -73,6 +72,7 @@
                                     <!--<input type="file" class="form-control-file" id="file">-->
                                     <input type="file" class="form-control-file" id="file"  @change="GetImage" />
                                 </div>
+                                <div style="z-index:2000"> <FlashMessage></FlashMessage></div>
 
                                 <div class="form-group col-md-6">
                                     <img :src="profil" alt="Image" width="150">
@@ -250,7 +250,7 @@
                                 time: 3050,
                                 flashMessageStyle: {
                                     backgroundColor: 'linear-gradient(#e66465, #9198e5)',
-                                    position:top
+
                                 }
                             });
                         } else {

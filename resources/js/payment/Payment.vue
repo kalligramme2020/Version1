@@ -113,7 +113,7 @@ import Swal from "sweetalert2";
                 .then((response)=>{
                     // console.log(response.data);
                     this.metainvoice = response.data;
-                    this.loading = false;
+                    this.loading = false
                 })
         },
 
@@ -147,15 +147,15 @@ import Swal from "sweetalert2";
                     .then(response => {
                         this.metainvoice = response.data;
                     });
-            },
+            }
 
         },
 
-        computed: {
+        computed:{
             invoices(){
                 if (this.keyword)
-                    return this.meatainvoice.data.filter(({identifiant}) => {
-                        return identifiant.toLowerCase().includes(this.keyword.toLowerCase())
+                    return this.metainvoice.data.filter(({identifiant}) => {
+                        return identifiant.toLowerCase().includes(this.keyword.toLowerCase());
                     });
                 else
                     return this.metainvoice.data;

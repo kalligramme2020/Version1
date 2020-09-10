@@ -4,7 +4,7 @@
 
     <div class="container ">
 
-        <div class="row justify-content-center mt-4">
+        <div class="row justify-content-center mt-2">
             <div class="col-md-4">
 
                 <div class="text-center mb-3">
@@ -30,7 +30,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group mt-4">
+                                <div class="form-group mt-3">
                                     <input type="password" class="form-control" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -47,13 +47,7 @@
                                     </label>
                                 </div>
 
-                                <div class="d-flex justify-content-center mt-3">
-                                    <button type="submit" class="btn btn-outline-primary btn-sm text-dark">
-                                        {{ __('Connexion') }}
-                                    </button>
-                                </div>
-
-                                <div class="d-flex justify-content-center mt-3">
+                                <div class="d-flex mt-3">
                                     <p class="text-success font-weight-bold">se connecter avec:</p>
 
                                     <a type="button" class="btn-floating btn-fb btn-sm">
@@ -62,6 +56,12 @@
                                     <a type="button" class="btn-floating btn-tw btn-sm">
                                         <i class="fab fa-twitter"></i>
                                     </a>
+                                </div>
+
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button type="submit" class="btn btn-outline-primary btn-sx text-dark">
+                                        {{ __('Connexion') }}
+                                    </button>
                                 </div>
 
                                 <div class="d-flex justify-content-center mt-2">

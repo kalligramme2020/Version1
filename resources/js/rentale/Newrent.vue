@@ -87,7 +87,7 @@
 
                                 <div class="form-group col-md-4" >
 
-                                    <label for="ende">duree:<button @click="Date" class=" btn-primary btn-xs">calculer</button></label>
+                                    <label for="ende">duree du contrat:<button @click="Date" class=" btn-primary btn-xs">calculer</button></label>
                                     <input type="text" class="form-control" id="ende" v-model="NewRent.duration">
                                 </div>
 
@@ -113,7 +113,8 @@
 
                                 <div class="form-group col-md-6">
                                     <label for="avec">date de paiement</label>
-                                    <input type="date" class="form-control" id="avec" v-model="NewRent.paiement_date" placeholder="fcfa">
+                                    <input type="number" class="form-control" id="avec" v-model="NewRent.paiement_date">
+                                    <span></span>
                                 </div>
 
                             </div>

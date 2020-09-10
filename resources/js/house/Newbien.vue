@@ -7,7 +7,7 @@
 
         <div class = "page-header text-center">
             <h4> Nouveau bien</h4>
-            <div style="z-index:2000"> <FlashMessage></FlashMessage></div>
+
 
         </div>
         <div class="dropdown-divider"></div>
@@ -28,6 +28,10 @@
                                 <div class="form-group col-md-6">
                                     <label for="non">Nom</label>
                                     <input type="text" class="form-control" id="non" v-model="newHouse.name"required >
+                                </div>
+
+                                <div style="z-index:2000">
+                                    <FlashMessage />
                                 </div>
 
                                 <div class="form-group col-md-6 ml-2" >
@@ -244,18 +248,19 @@
                     image:this.profil
                 })
                     .then((response)=>{
-                        if (response.data){
+                        if (response.data || status){
                             this.flashMessage.success({
                                 title: 'Nouveau bien',
                                 message: 'Enregistrement terminé',
                                 time: 3000,
                                 flashMessageStyle: {
                                     backgroundColor: 'linear-gradient(#e66465, #9198e5)',
-                                    position:top,
+
                                 }
+
                             });
                         } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                            this.flashMessage.error({title: 'oups', message: 'probleme rencontré'});
                         }
                     })
                     .then(

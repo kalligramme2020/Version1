@@ -1950,11 +1950,6 @@ __webpack_require__.r(__webpack_exports__);
       date2: '',
       date1: ''
     };
-  },
-  computed: {
-    title: function title() {
-      return new Date(1980, 6, 31);
-    }
   }
 });
 
@@ -2408,8 +2403,7 @@ __webpack_require__.r(__webpack_exports__);
             message: 'Modification terminé',
             time: 3050,
             flashMessageStyle: {
-              backgroundColor: 'linear-gradient(#e66465, #9198e5)',
-              position: top
+              backgroundColor: 'linear-gradient(#e66465, #9198e5)'
             }
           });
         } else {
@@ -2434,6 +2428,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -2673,20 +2671,19 @@ __webpack_require__.r(__webpack_exports__);
         magasin: this.newHouse.magasin,
         image: this.profil
       }).then(function (response) {
-        if (response.data) {
+        if (response.data || status) {
           _this3.flashMessage.success({
             title: 'Nouveau bien',
             message: 'Enregistrement terminé',
             time: 3000,
             flashMessageStyle: {
-              backgroundColor: 'linear-gradient(#e66465, #9198e5)',
-              position: top
+              backgroundColor: 'linear-gradient(#e66465, #9198e5)'
             }
           });
         } else {
           _this3.flashMessage.error({
-            title: 'Error Message Title',
-            message: 'xxxxxxxxxx'
+            title: 'oups',
+            message: 'probleme rencontré'
           });
         }
       }).then(this.newHouse.description = '', this.newHouse.name = '', this.newHouse.typebien = '', this.newHouse.ville = '', this.newHouse.region = "", this.newHouse.pays = '', this.newHouse.address, this.newHouse.surface = '', this.newHouse.chambre = '', this.newHouse.cuisine = '', this.newHouse.salon = "", this.newHouse.bain = '', this.newHouse.studio = '', this.newHouse.appart = '', this.newHouse.banquet = '', this.newHouse.addresse = '', this.newHouse.parent_id = '');
@@ -3440,7 +3437,7 @@ __webpack_require__.r(__webpack_exports__);
     invoices: function invoices() {
       var _this3 = this;
 
-      if (this.keyword) return this.meatainvoice.data.filter(function (_ref) {
+      if (this.keyword) return this.metainvoice.data.filter(function (_ref) {
         var identifiant = _ref.identifiant;
         return identifiant.toLowerCase().includes(_this3.keyword.toLowerCase());
       });else return this.metainvoice.data;
@@ -3866,6 +3863,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -47936,11 +47934,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container-fluid" }, [
-    _c("div", { staticClass: "page-header text-center" }, [
-      _c("h4", [_vm._v(" Modifier ce bien")]),
-      _vm._v(" "),
-      _c("div", { staticStyle: { "z-index": "2000" } }, [_c("FlashMessage")], 1)
-    ]),
+    _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "dropdown-divider" }),
     _vm._v(" "),
@@ -48150,7 +48144,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group col-md-6" }, [
-                  _vm._m(0),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c(
                     "select",
@@ -48297,6 +48291,13 @@ var render = function() {
                     on: { change: _vm.GetImage }
                   })
                 ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticStyle: { "z-index": "2000" } },
+                  [_c("FlashMessage")],
+                  1
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group col-md-6" }, [
                   _c("img", {
@@ -48683,6 +48684,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "page-header text-center" }, [
+      _c("h4", [_vm._v(" Modifier ce bien")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "pays" } }, [
       _vm._v("pays "),
       _c("i", {
@@ -48718,11 +48727,7 @@ var render = function() {
       ? _c("div", { staticClass: "card text-center" }, [_vm._m(0)])
       : _vm._e(),
     _vm._v(" "),
-    _c("div", { staticClass: "page-header text-center" }, [
-      _c("h4", [_vm._v(" Nouveau bien")]),
-      _vm._v(" "),
-      _c("div", { staticStyle: { "z-index": "2000" } }, [_c("FlashMessage")], 1)
-    ]),
+    _vm._m(1),
     _vm._v(" "),
     _c("div", { staticClass: "dropdown-divider" }),
     _vm._v(" "),
@@ -48817,6 +48822,13 @@ var render = function() {
                     }
                   })
                 ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticStyle: { "z-index": "2000" } },
+                  [_c("FlashMessage")],
+                  1
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group col-md-6 ml-2" }, [
                   _c(
@@ -48936,7 +48948,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group col-md-6" }, [
-                  _vm._m(1),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c(
                     "select",
@@ -49447,6 +49459,14 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("h1", [_c("span", { staticClass: "fas fa-spinner fa-pulse" })])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "page-header text-center" }, [
+      _c("h4", [_vm._v(" Nouveau bien")])
+    ])
   },
   function() {
     var _vm = this
@@ -52231,7 +52251,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group col-md-4" }, [
                     _c("label", { attrs: { for: "ende" } }, [
-                      _vm._v("duree:"),
+                      _vm._v("duree du contrat:"),
                       _c(
                         "button",
                         {
@@ -52378,7 +52398,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { type: "date", id: "avec", placeholder: "fcfa" },
+                      attrs: { type: "number", id: "avec" },
                       domProps: { value: _vm.NewRent.paiement_date },
                       on: {
                         input: function($event) {
@@ -52392,7 +52412,9 @@ var render = function() {
                           )
                         }
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _c("span")
                   ])
                 ])
               ]),

@@ -31,12 +31,7 @@
             }
         },
 
-        computed:{
-            title(){
-                return new Date(1980, 6, 31);
 
-            }
-        }
     }
 </script>
 
