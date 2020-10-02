@@ -58,7 +58,7 @@
                                     </td>
                                     <td>
                                         <router-link :to="{ name: 'showbien', params: { id: bien.id }}" class="text-primary">{{bien.name}}</router-link><br>
-                                        <i class="fas fa-map-marker-alt fa-sx"></i> <span class="bien_local" v-if="bien.parentid !== null">{bien.parentid.addresse}}</span>
+                                        <i class="fas fa-map-marker-alt fa-sx"></i> <span class="bien_local" v-if="bien.parentid !== null">{{bien.parentid.addresse}}</span>
                                         <span class="bien_local" v-else>{{bien.addresse}}</span>
                                     </td>
                                     <td>{{bien.tbien.name}}</td>

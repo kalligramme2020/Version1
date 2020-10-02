@@ -82306,7 +82306,7 @@ var render = function() {
                                     ? _c(
                                         "span",
                                         { staticClass: "bien_local" },
-                                        [_vm._v("{bien.parentid.addresse}}")]
+                                        [_vm._v(_vm._s(bien.parentid.addresse))]
                                       )
                                     : _c(
                                         "span",
