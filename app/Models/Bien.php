@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Bien extends Model
 {
     protected $fillable = [
-        'bien_id', 'type_bien_id', 'appartement','banquet','appart_meuble',
-        'users_id', 'name','ville', 'parking','pays_id', 'addresse','surface', 'description','photo','region'
+        'bien_id', 'type_bien_id','FinBail','statut',
+        'users_id', 'name','ville','pays_id', 'addresse','surface', 'description','photos','region'
     ];
 
     protected $table = 'bien';
@@ -46,12 +46,15 @@ class Bien extends Model
         return $this->hasMany('App\Models\Bien', 'bien_id');
     }
 
-    public function locataires()
+    public function locataire()
     {
         return $this->belongsToMany('App\Models\Locataire', 'location','bien_id','locataire_id')->withTimestamps();
     }
 
-
+    public function locations()
+    {
+        return $this->hasMany('App\Models\Location' , 'bien_id');
+    }
 
 
 }

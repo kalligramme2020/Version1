@@ -21,8 +21,8 @@
                             </thead>
                             <tbody v-for="(state,index) in getSate " :key="index">
                             <tr>
-                                <th scope="row">{{state.users_id}}</th>
-                                <td> <img v-for=" (img, index) in state.photo " :src="img" width="100" height="100" class="ml-2"  alt="">  </td>
+                                <th scope="row">{{state.location.identifiant}}</th>
+                                <td> <img v-for=" (img, index) in state.photo " :src="img" width="100" height="100" class="ml-2">  </td>
                                 <td>{{state.description}}</td>
 
                                 <td>
@@ -53,9 +53,9 @@
         created(){
             axios.get('api/state')
                 .then((response)=>{
-                    // console.log(response.data)
+                    console.log(response.data)
                     this.getSate = response.data
-                    console.log(this.getSate)
+                    // console.log(this.getSate)
                 })
         },
 

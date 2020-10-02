@@ -44,7 +44,7 @@
                                 <tr>
                                     <th><input type="checkbox" onclick="checkAll(this)"></th>
                                     <th>Profil</th>
-                                    <th>Nom Prenom</th>
+                                    <th>Locataire</th>
                                     <th>email</th>
                                     <th>Numero</th>
                                     <th>Cni</th>
@@ -55,10 +55,10 @@
                                 <tr>
                                     <td><input type="checkbox" name=""></td>
                                     <td>
-                                        <img :src=" avatar(tenant.photo) " alt="" class="avatar">
+                                        <img :src="tenant.photo " alt="" class="avatar">
                                     </td>
                                     <td>
-                                        <router-link :to="{ name: 'showtenant', params: { id: tenant.id }}" class="text-primary">{{tenant.nom}} {{tenant.prenom}}</router-link>
+                                        <router-link :to="{ name: 'showtenant', params: { id: tenant.id }}" class="text-primary">{{tenant.nom}} <span class="bien_local">{{tenant.prenom}}</span></router-link>
                                     </td>
                                     <td>{{tenant.email}}</td>
                                     <td>{{tenant.numero}}</td>
@@ -93,19 +93,26 @@
 
 <script>
     import Swal from 'sweetalert2'
-
-
     export default {
         name: "Tenants",
 
         data(){
             return{
                 loading: true,
-                metaTenant: null,
+                metaTenant: [],
                 keyword: null,
             }
         },
 
+        mounted(){
+
+            Echo.channel('Tenant')
+                .listen('.App\\Events\\DeleteEvent', (e) => {
+                    console.log(e);
+                    this.tenants.splice(this.tenants.indexOf(e.delete), 1);
+                });
+
+        },
 
         created(){
             axios.get('api/tenants')
@@ -117,12 +124,6 @@
         },
 
         methods:{
-
-            avatar(photo){
-                // console.log(photo)
-                return "image/" + photo
-            },
-
             deleteTenant(id){
                 Swal.fire({
                     text: "Etes-vous de cette action !",
@@ -136,15 +137,16 @@
                     if (result.value) {
                         axios.delete('api/tenants/' + id)
                             .then((response) => {
-
-                            })
+                            });
                         Swal.fire(
                             'Supprimer',
                             'success'
                         )
                     }
                 })
+
             },
+
 
             // Our method to GET results from a Laravel endpoint
             getResultsPaginate(page = 1) {
@@ -158,18 +160,23 @@
 
         computed: {
             tenants(){
-                if (this.keyword)
+                if (this.keyword !== null)
                     return this.metaTenant.data.filter(({nom, prenom}) => {
                         return nom.toLowerCase().includes(this.keyword.toLowerCase())
                             || prenom.toLowerCase().includes(this.keyword.toLowerCase())
                     });
-                else
-                    return this.metaTenant.data;
+                else {
+                    return this.metaTenant.data
+                }
+
             }
         }
     }
 </script>
 
 <style scoped>
-
+.bien_local{
+    font-size:11px;
+}
 </style>
+

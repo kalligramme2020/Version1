@@ -22,6 +22,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{{ asset('js/sidebare.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
 
 
 
@@ -51,20 +52,22 @@
 
             <router-link class="list-group-item list-group-item-action bg-light" to="/"> <i class="fas fa-desktop fa-lg"></i> Accceuil</router-link>
             <router-link class="list-group-item list-group-item-action bg-light" to="/tenants"><i class="fas fa-user-plus fa-lg"></i> Locataire</router-link>
-            <router-link class="list-group-item list-group-item-action bg-light" to="/bien"><i class="fas fa-home fa-lg"></i> Bien</router-link>
+
+            <a class="list-group-item list-group-item-action bg-light dropdown-btn"><i class="fas fa-home fa-sm"></i>Biens
+                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+            </a>
+            <div class="dropdown-container">
+                <router-link class="list-group-item list-group-item-action bg-light" to="/bien"><i class="fas fa-home fa-lg"></i> biens</router-link>
+                <router-link class="list-group-item list-group-item-action bg-light" to="/immeubles"><i class="fas fa-building fa-lg"></i> immeubles</router-link>
+            </div>
+
+            <div class="dropdown-divider"></div>
             <router-link class="list-group-item list-group-item-action bg-light" to="/rent"><i class="fas fa-key fa-lg"></i> Location</router-link>
             <router-link class="list-group-item list-group-item-action bg-light" to="/state"><i class="far fa-eye fa-lg"></i> Etat des lieux</router-link>
             <router-link class="list-group-item list-group-item-action bg-light" to="/payment"><i class="fas fa-coins fa-lg"></i> finances</router-link>
             <a href="#" class="list-group-item list-group-item-action bg-light">Shortcuts</a>
             <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
 
-            <a class="list-group-item list-group-item-action bg-light dropdown-btn">dorpdown
-                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-            </a>
-            <div class="dropdown-container">
-                <a href="#" class="list-group-item list-group-item-action bg-light">Link 1</a>
-                <a href="#" class="list-group-item list-group-item-action bg-light">Link 2</a>
-            </div>
         </div>
 
     </div>

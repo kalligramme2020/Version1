@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','prenom','ville', 'cni', 'pays','profil','numero',
+        'name', 'email', 'password','prenom','ville', 'cni', 'pays','profil','numero','google_id'
     ];
 
     public function locataires()
@@ -30,6 +30,11 @@ class User extends Authenticatable
     public function biens()
     {
         return $this->hasMany('App\Models\Bien', 'users_id');
+    }
+
+    public function locations()
+    {
+        return $this->hasMany('App\Models\Location');
     }
 
 
@@ -52,4 +57,12 @@ class User extends Authenticatable
     ];
 
     protected $table = 'users';
+
+
+    public function routeNotificationForMail($notification)
+    {
+        // Return email address only...
+        return $this->email;
+
+    }
 }

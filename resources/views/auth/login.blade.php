@@ -47,16 +47,7 @@
                                     </label>
                                 </div>
 
-                                <div class="d-flex mt-3">
-                                    <p class="text-success font-weight-bold">se connecter avec:</p>
 
-                                    <a type="button" class="btn-floating btn-fb btn-sm">
-                                        <i class="fab fa-facebook-f"></i>
-                                    </a>
-                                    <a type="button" class="btn-floating btn-tw btn-sm">
-                                        <i class="fab fa-twitter"></i>
-                                    </a>
-                                </div>
 
                                 <div class="d-flex justify-content-center mt-3">
                                     <button type="submit" class="btn btn-outline-primary btn-sx text-dark">

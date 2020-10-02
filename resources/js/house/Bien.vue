@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+
 <template>
     <div id="content">
         <div class="container-fluid">
@@ -43,28 +43,36 @@ import Swal from "sweetalert2";
                                 <thead class=" text-center">
                                 <tr>
                                     <th scope="col">photo</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Adresse</th>
-                                    <th scope="col">ville</th>
+                                    <th scope="col">bien</th>
+                                    <th scope="col">type</th>
+                                    <th scope="col">Superficie m²</th>
+                                    <th scope="col">Statut</th>
                                     <th scope="col"> action </th>
                                 </tr>
                                 </thead>
 
                                 <tbody v-for=" bien in biens" :key="bien.id">
-                                <tr>
-
+                                <tr v-if="bien.tbien.name !== 'Immeuble' ">
                                     <td>
-                                        <img :src=" avatar(bien.photo) " alt="" class="avatar">
-
+                                        <img :src="bien.photos " alt="" class="avatar">
                                     </td>
                                     <td>
-                                        <router-link :to="{ name: 'showbien', params: { id: bien.id }}" class="text-primary">{{bien.name}}</router-link>
+                                        <router-link :to="{ name: 'showbien', params: { id: bien.id }}" class="text-primary">{{bien.name}}</router-link><br>
+                                        <i class="fas fa-map-marker-alt fa-sx"></i> <span class="bien_local" v-if="bien.parentid !== null">{bien.parentid.addresse}}</span>
+                                        <span class="bien_local" v-else>{{bien.addresse}}</span>
                                     </td>
-                                    <td v-if="bien.parentid !== null">{{bien.parentid.addresse}}</td>
-                                    <td v-else>{{bien.addresse}}</td>
+                                    <td>{{bien.tbien.name}}</td>
 
-                                    <td v-if="bien.parentid !== null">{{bien.parentid.ville}}</td>
-                                    <td v-else>{{bien.ville}}</td>
+                                    <td>{{bien.surface}}</td>
+                                    <td v-if="bien.locations == 0"><span class="badge badge-warning badge-pill">Disponible</span></td>
+                                    <td v-else>
+                                        <p v-for="statut in bien.locations" :key="statut.id">
+                                            <span v-if=" statut.fin_bail !== null && currentDate < statut.fin_bail" class="badge badge-success badge-pill">
+                                                Occuper
+                                            </span>
+                                            <span v-else class="badge badge-warning badge-pill">Disponible</span>
+                                        </p>
+                                    </td>
 
                                     <th class="text-center">
                                         <div class="btn-group">
@@ -72,11 +80,9 @@ import Swal from "sweetalert2";
                                                 actions
                                             </button>
                                             <div class="dropdown-menu">
-<!--                                                <a href="#" class="dropdown-item"><i class="fas fa-edit fa-sm"> </i> modifier</a>-->
                                                 <router-link :to="{ name: 'editbien', params: { id: bien.id }}" class="dropdown-item"><i class="fas fa-edit fa-sm"> </i> modifier</router-link>
-
+                                                <button class="dropdown-item"><i class="fas fa-key fa-sm"></i> Louer</button>
                                                 <button @click="deleteBien(bien.id)" class="dropdown-item"> <i class="fas fa-trash-alt fa-sm"></i> suprimer</button>
-
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="#">Autres</a>
                                             </div>
@@ -106,30 +112,43 @@ import Swal from "sweetalert2";
         data(){
             return{
                 metaBiens:{},
+                metaTenant:null,
                 keyword:null,
                 loading: true,
-
+                currentDate:null,
+                rental:null,
             }
+        },
+
+        mounted(){
+
+            Echo.channel('Statut')
+                .listen('.App\\Events\\statutEvent', (e) => {
+                    // console.log(e);
+                });
+
+            Echo.channel('Tenant')
+                .listen('.App\\Events\\DeleteEvent', (e) => {
+                    console.log(e);
+                    this.biens.splice(this.biens.indexOf(e.delete), 1);
+
+                });
+            this.currentDate = moment().format("YYYY-MM-DD")
+
+            console.log(this.currentDate)
         },
 
 
         created(){
             axios.get('api/bien')
                 .then((response)=>{
-                    console.log(response.data);
                     this.metaBiens = response.data;
+                    // console.log(this.metaBiens);
                     this.loading = false;
-
                 })
         },
 
         methods:{
-
-            avatar(photo){
-                // console.log(photo)
-                return "image/" + photo
-            },
-
             deleteBien(id){
                 Swal.fire({
                     text: "Etes-vous de cette action !",
@@ -171,11 +190,19 @@ import Swal from "sweetalert2";
                     });
                 else
                     return this.metaBiens.data;
+            },
+
+            statut(){
+                return this.metaBiens.data.locations
             }
+
+
         }
     }
 </script>
 
 <style scoped>
-
+ .bien_local{
+     font-size:10px;
+ }
 </style>

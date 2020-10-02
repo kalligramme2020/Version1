@@ -116,7 +116,7 @@
                 reader.onload = e => {
                     // console.log(e)
                     this.profil = e.target.result
-                    console.log(this.profil)
+                    // console.log(this.profil)
                 }
             },
 

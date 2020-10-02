@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\NotifyUserCommand::class,
     ];
 
     /**
@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('userNotify')->monthlyOn(10, '7:00');
+        $schedule->command('tenantNotify')->monthlyOn(10, '7:00');
     }
 
     /**

@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Events\statutEvent;
 use App\Models\Locataire;
+use App\Models\Location;
 use App\Models\Pays;
 use App\Models\Type_bien;
 use Illuminate\Http\Request;
@@ -31,5 +33,24 @@ class  PaysController extends Controller
             'land' => $pays ,
             'peol' => $tbiens,
         ]);
+    }
+
+    public function statut()
+    {
+
+        $statut = Location::all()->where('statut', '=', 1);
+
+
+
+        if (!$statut)
+            return response()->json([
+                'statut' => 'disponible'
+            ]);
+        else
+            return response()->json([
+                'statut' => 'Occupeé'
+            ]);
+
+
     }
 }

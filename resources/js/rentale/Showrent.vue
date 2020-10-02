@@ -77,23 +77,25 @@
 
 
           <div class="col-md-6">
-              <div class="card text-center">
+              <div class="card">
                   <div class="card-header">
-                      Etats des lieux
+                      <router-link class="list-group-item list-group-item-action bg-light" to="/state"><i class="far fa-eye fa-lg"></i> Etat des lieux</router-link>
                   </div>
                   <div class="card-body">
-                      <h5 class="card-title"></h5>
-                      <p class="card-text"></p>
-                      <a href="#" class="btn btn-primary"></a>
+
+                    <div v-for="etat in rent.etats">
+                        <img v-for=" img in etat.photo " :src="img" width="100" height="100" class="ml-2">
+                        <div class="alert alert-primary text-center " role="alert">
+                            <h6 class="card-title text-left text-muted">Description:</h6>
+                            <p >{{etat.description}}</p>
+                        </div>
+                    </div>
+                  <div class="dropdown-divider"></div>
+
                   </div>
 
 
-                  <div class="card border-success">
-                      <div class="card-body">
-                          <h6 class="card-title text-left text-muted">Description:</h6>
-                          <p>{{rent.description}}</p>
-                      </div>
-                  </div>
+
 
 
               </div>
@@ -121,7 +123,11 @@
 
         data(){
             return{
-                rent:{}, bien:{}, locataire:{},bailieur:{},
+                rent:{},
+                bien:{},
+                locataire:{},
+                bailieur:{},
+                etats:null,
             }
         },
 
@@ -130,11 +136,12 @@
             // console.log(this.$route.params.id)
             axios.get('api/rentale/'+ this.$route.params.id)
                 .then((response)=>{
-                    console.log(response.data)
-                    this.rent = response.data
-                    this.bien = response.data.bien
-                    this.locataire = response.data.locataire
-                    this.bailieur = response.data.bailler
+                    console.log(response.data),
+                    this.rent = response.data,
+                    this.bien = response.data.bien,
+                    this.locataire = response.data.locataire,
+                    this.bailieur = response.data.bailler,
+                    this.etats = response.data.etats
                 });
         },
     }

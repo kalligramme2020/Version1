@@ -3,45 +3,46 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="container px-lg-5">
-                        <div class="row mx-lg-n5">
-                            <div class="col py-3 px-lg-5 border bg-light">
-                                <div class="form-control">
-<!--                                    <input class="hidden" @change="imageChange" type="file" name="images " ref="files" multiple />-->
-                                    <input type="file" id="file"  @change="GetImage" multiple/>
 
 
+                    <div class="row justify-content-center">
 
-                                </div>
+                        <div class="col-9 mt-5 mb-4">
+                            <div class="container">
+                            <h2>Selectionner</h2>
 
-                                <div class="m-auto preview">
-<!--                                    <p v-for="(image, index) in image" :key="index" >-->
-<!--                                        {{image.name}}-->
-<!--                                    </p>-->
-                                </div>
+                                    <div class="form-group">
+                                        <label for="files">Selectionner</label>
+                                        <input type="file" class="form-control-file" id="files" ref="files" multiple v-on:change="handleFileUploads()" />
+                                    </div>
 
+                                    <div class="form-group col-md-6">
+                                          <label for="inputState">Location lier</label>
+                                        <select id="inputState" class="form-control" v-model="state.location">
+                                          <option selected>Choose...</option>
+                                            <option v-for="rent in rental" :value="rent.id" :key="rent.id">{{rent.identifiant}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                         <label for="Textarea1">Description</label>
+                                         <textarea class="form-control" id="Textarea1" rows="3" v-model="state.description"></textarea>
+                                    </div>
+
+
+                                <button class="btn btn-outline-secondary" v-on:click="submitFiles()">Appliquer</button>
                             </div>
+                        </div>
 
 
-                            <div class="col py-3 px-lg-5 border bg-light">
-
-                                <div class="form-group">
-                                    <textarea name="body" class="form-control" v-model="state.description" rows="4" placeholder="description"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ex">location lier</label>
-                                    <select class="form-control" id="ex" v-model="state.location" >
-                                        <option></option>
-                                        <option v-for=" (rent ,index) in rental " :key="index" :value="rent.id" >{{rent.identifiant}}</option>
-                                    </select>
-                                </div>
+                         <div class="col-3 border-left ">
+                            <div class=" text-center mt-2 ml-2">
+                             <router-link to="/state" type="button" class="btn btn-danger btn-sm">Retour</router-link>
                             </div>
                         </div>
                     </div>
+
                 </div>
-
-                <button class="btn btn-outline-danger" @click="AddImages">enregistrer</button>
-
             </div>
         </div>
     </div>
@@ -51,7 +52,11 @@
     export default {
         data(){
             return{
-                image:[], rental:null, state:{ 'location':'', 'description':'' }
+                rental:null,
+                state:{ 'location':'', 'description':'' },
+
+                files:"",
+
             }
         },
 
@@ -62,53 +67,100 @@
                     this.rental = response.data;
                 })
         },
+
         methods:{
-            GetImage(e){
-                var files = e.target.files ,
-                    filesLength = files.length ;
-                for (var i = 0; i < filesLength ; i++) {
-                    var f = files[i]
+
+            handleFileUploads(){
+                this.files = this.$refs.files.files;
+                console.log(this.files)
+            },
+
+            submitFiles(){
+                let formData = new FormData();
+                formData.append('description', this.state.description);
+                formData.append('location_lier', this.state.location);
+
+                for( var i = 0; i < this.files.length; i++ ){
+                    let file = this.files[i];
+                    formData.append('files[' + i + ']', file);
+                }
+
+               axios.post( '/api/state',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                    ).then(function(){
+                    console.log('SUCCESS!!');
+                    })
+                    .catch(function(){
+                    console.log('FAILURE!!');
+                     })
+                     .then(
+                         this.state.description="", this.state.location=''
+                     )
+            }
+        }
+
+
+    }
+
+    $(document).ready(function() {
+        if (window.File && window.FileList && window.FileReader) {
+            $("#files").on("change", function(e) {
+                var files = e.target.files,
+                    filesLength = files.length;
+                for (var i = 0; i < filesLength; i++) {
+                    var f = files[i];
                     var fileReader = new FileReader();
                     fileReader.onload = (function(e) {
                         var file = e.target;
-                        console.log(file.result)
-
-                        $("<img>",{
-                            class : "imageThumb ml-4",
-                            width : 100,
-                            src : e.target.result,
-                            title : file.name
-                        }).insertAfter(".preview");
+                        $("<span class=\"pip\">" +
+                            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+                            "<br/><span class=\"remove\">Annuler</span>" +
+                            "</span>").insertAfter("#files");
+                        $(".remove").click(function(){
+                            $(this).parent(".pip").remove();
+                        });
                     });
                     fileReader.readAsDataURL(f);
                 }
-            },
-
-
-            AddImages(){
-                console.log(this.image)
-
-                axios.post('/api/state',{
-                    papa:this.image
-                })
-                    .then(response => {
-                        this.state.location="";
-                        this.state.description=""
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-
-            }
-
+            });
         }
-    }
-
-
+        else {
+            alert("Your browser doesn't support to File API")
+        }
+    });
 
 </script>
 
-<style>
-
+ <style>
+    input[type="file"] {
+        display: block;
+    }
+    .imageThumb {
+        max-height: 75px;
+        border: 2px solid;
+        padding: 1px;
+        cursor: pointer;
+    }
+    .pip {
+        display: inline-block;
+        margin: 10px 10px 0 0;
+    }
+    .remove {
+        display: block;
+        background: #444;
+        border: 1px solid black;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+    .remove:hover {
+        background: white;
+        color: black;
+    }
 </style>
 

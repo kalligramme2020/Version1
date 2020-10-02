@@ -8,7 +8,7 @@ class Piece extends Model
 {
     protected $table = "piece";
 
-    protected $fillable = ['cuisine' , 'chambre', 'salon', 'parking', 'studio', 'salle_bain', 'appartement','type_bien_id', 'terrasse','magasin'];
+    protected $fillable = ['cuisine' , 'chambre', 'salon', 'parking', 'magasin', 'appart_meuble', 'studio', 'salle_bain', 'appartement','type_bien_id', 'terrasse','magasin'];
 
     public static function boot() {
         parent::boot();

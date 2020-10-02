@@ -38,26 +38,35 @@
                             <table class="table table-bordered">
                                 <thead class=" text-center">
                                 <tr>
-                                    <th scope="col">identifiant</th>
-                                    <th scope="col">bien</th>
+                                    <th scope="col">Bien</th>
                                     <th scope="col">locataire</th>
                                     <th scope="col">loyer</th>
-                                    <th scope="col">duree</th>
+                                    <th scope="col">dureé</th>
+                                    <th scope="col">Etat</th>
                                     <th scope="col">actions</th>
 
                                 </tr>
                                 </thead>
                                 <tbody v-for="location in locations" :key="location.id">
                                 <tr>
-                                    <td><router-link :to="{ name: 'showrent', params: { id: location.id }}" class="text-primary">{{location.identifiant}}</router-link></td>
                                     <td>
-                                        <router-link :to="{ name: 'showbien', params: { id: location.bien_id }}" >{{location.bien.name}}</router-link>
+                                        <router-link :to="{ name: 'showrent', params: { id: location.id }}" class="text-primary">{{location.identifiant}}</router-link>
+                                        <router-link :to="{ name: 'showbien', params: { id: location.bien_id }}"  class="bien_local">{{location.bien.name}}</router-link>
+                                        <br>
+                                        <span class="bien_local" >{{location.type_bail}}</span>
+                                        <i class="fas fa-map-marker-alt fa-sm"></i> <span class="bien_local" >{{location.bien.addresse}}</span>
                                     </td>
                                     <td class="text-primary">
                                         <router-link :to="{ name: 'showtenant', params: { id: location.locataire.id }}" >{{location.locataire.nom}}</router-link>
                                     </td>
                                     <td>{{location.loyer_hc}}</td>
                                     <td>{{location.debut_bail}} - {{location.fin_bail}}</td>
+
+                                    <td v-if="location.fin_bail < new Date().toISOString()">
+                                        <span class="badge badge-warning badge-pill">Inactif</span>
+                                    </td>
+                                    <td v-else><span class="badge badge-danger badge-pill">Actif</span></td>
+
                                     <th class="text-center">
                                         <div class="btn-group">
                                             <button class="btn btn-secondary btn-sm  " type="button" data-toggle="dropdown" aria-expanded="false">
@@ -102,6 +111,17 @@
                 loading:true,
                 keyword:null
             }
+        },
+
+        mounted(){
+
+            Echo.channel('Tenant')
+                .listen('.App\\Events\\DeleteEvent', (e) => {
+                    // console.log(e);
+                    this.locations.splice(this.locations.indexOf(e.delete), 1);
+
+                });
+
         },
 
         created() {
@@ -163,5 +183,7 @@
 </script>
 
 <style scoped>
-
+.bien_local{
+    font-size:10px;
+}
 </style>

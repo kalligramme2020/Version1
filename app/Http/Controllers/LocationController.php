@@ -2,26 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeleteEvent;
+use App\Events\statutEvent;
 use App\Models\Bien;
 use App\Models\Locataire;
 use App\Models\Location;
+use App\Notifications\TenantEmailNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function GuzzleHttp\Promise\all;
 
 class LocationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param $local
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         $locations = Location::with('bien','locataire')
             ->where('users_id', '=', Auth::id())
-            ->paginate(2);
-//        dd($locations);
+            ->paginate(5);
+
         return response()->json($locations);
+
     }
 
     /**
@@ -32,7 +38,9 @@ class LocationController extends Controller
     public function create()
     {
         $locataires = Locataire::all()->where('users_id', '==', Auth::id());
-        $biens = Bien::with('pieces', 'tbien')->get()->where('users_id', '==', Auth::id());
+        $biens = Bien::with('pieces', 'locations', 'tbien')->get()->where('users_id', '==', Auth::id());
+
+
         return response()->json([
             'locataires' => $locataires,
             'biens' => $biens
@@ -47,6 +55,7 @@ class LocationController extends Controller
      */
     public function store(Request $request)
     {
+
 
         $Addlocation = Location::create([
             'locataire_id' => $request['locataire_id'],
@@ -68,9 +77,6 @@ class LocationController extends Controller
 
         ]);
 
-        return response()->json([
-           'message'=> 'enregistrement reussit'
-        ]);
     }
 
     /**
@@ -81,7 +87,7 @@ class LocationController extends Controller
      */
     public function show($id)
     {
-        $showlocation = Location::with('bailler','locataire', 'bien')->find($id);
+        $showlocation = Location::with('bailler','locataire', 'etats' , 'bien')->find($id);
 //        dd($showlocation);
         return response()->json($showlocation);
     }
@@ -114,12 +120,7 @@ class LocationController extends Controller
             'locataire_id' => $request['locataire_id'],
             'users_id' => Auth::id(),
             'bien_id' => $request['bienlouer'],
-            'activiter_proprio' => $request['proprioDescription'],
-            'activiter_locataire' => $request['locataireDescription'],
-            'conditions' => $request['condition'],
             'description' => $request['description'],
-            'montant_proprio' => $request['proprio'],
-            'montant_locataire' => $request['locataire'],
             'residence1' => $request['residence1'],
             'residence2' => $request['residence2'],
             'loyer_hc' => $request['loyerhc'],
@@ -133,7 +134,6 @@ class LocationController extends Controller
             'garantir' => $request['garantir'],
             'payment_date' => $request['paiement_date'],
         ]);
-
         return response()->json(['messsage' => 'dkljlkjdflkjkldjl']);
 
     }
@@ -147,11 +147,14 @@ class LocationController extends Controller
 
     public function destroy($id)
     {
-        $location = Location::find($id);
+        $delete = Location::find($id);
+
+        $events = new DeleteEvent($delete->id);
+        event($events);
 //        $location->etats()->delete();
-        $location->paiments()->delete();
-        $location->delete();
-        return response()->json(['messsage' => 'dkljlkjdflkjkldjl']);
+        $delete->paiments()->delete();
+        $delete->delete();
+
     }
 
 

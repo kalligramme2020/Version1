@@ -1,6 +1,5 @@
 <template>
     <div class="container-fluid">
-        <FlashMessage class="flashmessage"></FlashMessage>
         <div class="card text-center" v-if="loading">
             <h1><span class="fas fa-spinner fa-pulse"></span></h1>
         </div>
@@ -13,6 +12,7 @@
             <div class="col-md-8">
                 <div class="card mb-5">
                     <form enctype="multipart/form-data">
+                        <FlashMessage class="flashmessage"></FlashMessage>
 
                         <div class="card-body">
                             <div class="form-row">
@@ -20,7 +20,21 @@
                                     <label for="bien">bien louer</label>
                                     <select class="form-control" id="bien" v-model="NewRent.bienlouer">
                                         <option></option>
-                                        <option v-for="bien in biens" :key="bien.id" :value="bien.id" >{{bien.name}}</option>
+                                        <option v-for="bien in biens" :key="bien.id" :value="bien.id" >
+                                            <div v-if="bien.locations == 0">{{bien.name}}
+                                                <span >Disponible</span>
+                                            </div>
+                                            <div v-else > {{bien.name}}
+                                                <p  v-for="statut in bien.locations" :key="statut.id">
+                                                    <samp v-if=" statut.fin_bail !== null && new Date().toISOString() < statut.fin_bail" class="text-danger">
+                                                        <span>Occuper</span>
+                                                    </samp>
+                                                     <samp v-else class="text-success">
+                                                         <span> Disponible</span>
+                                                     </samp>
+                                                </p>
+                                            </div>
+                                        </option>
                                     </select>
                                 </div>
 
@@ -203,7 +217,7 @@
                 .then((response)=>{
                     this.biens = response.data.biens;
                     this.locataires = response.data.locataires;
-                    // console.log(this.locataires)
+                    console.log(this.biens)
                     this.loading = false
 
                 })

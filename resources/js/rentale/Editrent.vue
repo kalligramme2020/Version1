@@ -1,6 +1,5 @@
 <template>
     <div class="container-fluid">
-        <FlashMessage class="flashmessage"></FlashMessage>
 
         <div class = "page-header text-center">
             <h4> Modifier location</h4>
@@ -32,6 +31,8 @@
                         </div>
 
                         <div class="card-header">detail de location</div>
+                         <FlashMessage class="flashmessage"></FlashMessage>
+
                         <div class="card-body">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
@@ -177,8 +178,10 @@
         data(){
             return{
                 editrent:{
-                    'locataire_id':"", 'loyer_hc':"",'loyer_ac':"",'debut_bail':"","payment_date":'','fin_bail':"",'payment_date':"",'typebail':'',
-                }, bienedit:{'id':"", 'name':""} ,locataire:{'id':"", 'nom':""},
+                    'locataire_id':"", 'loyer_hc':"",'loyer_ac':"",'debut_bail':"",
+                    "payment_date":'','fin_bail':"",'typebail':'',
+                },
+                bienedit:{'id':"", 'name':""} ,locataire:{'id':"", 'nom':""},
 
                 bienLouer:'',locataire_id:'',
 
@@ -208,7 +211,7 @@
             EditRent(){
                 axios.patch('api/rentale/'+ this.editrent.id,{
                     bienlouer:this.bienedit.id,
-                    locataire_id:this.locataire_id,
+                    locataire_id:this.locataire.id,
                     description:this.editrent.description,
                     identifiant:this.editrent.identifiant,
                     residence1:this.editrent.residence1,
@@ -217,7 +220,7 @@
                     loyerhc:this.editrent.loyer_hc,
                     loyerac:this.editrent.loyer_ac,
                     debutb:this.editrent.debut_bail,
-                    finb:this.editrent.finb,
+                    finb:this.editrent.fin_bail,
                     typebail:this.editrent.typebail,
                     paiement_date:this.editrent.payment_date,
                     garantir:this.editrent.garantir,
@@ -227,7 +230,7 @@
                         // console.log(response.data);
                         if (response.data){
                             this.flashMessage.success({
-                                title: 'Modifier locataire',
+                                title: 'Location modifier',
                                 message: 'Modification terminé',
                                 time: 3050,
                                 flashMessageStyle: {

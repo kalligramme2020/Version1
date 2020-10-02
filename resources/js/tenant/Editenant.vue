@@ -65,8 +65,8 @@
                                 </div>
 
                                 <div class="form-group col-md-6 text-center" >
-                                    <img :src="profil" alt="Image" width="150">
-                                    <img :src=" avatar(Edittenant.photo) " alt="" width="150">
+                                    <img v-if="profil !== null" :src="profil" alt="Image" width="150">
+                                    <img v-else :src="Edittenant.photo " alt="" width="150" >
                                 </div>
                             </div>
 
@@ -118,12 +118,6 @@
         },
 
         methods:{
-
-            avatar(photo){
-                console.log(photo)
-                return "image/" + photo
-            },
-
             GetImage(e){
                 // console.log(e.target.files)
                 let image = e.target.files[0]

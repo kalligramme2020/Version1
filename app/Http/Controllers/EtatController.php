@@ -18,7 +18,7 @@ class EtatController extends Controller
     public function index()
     {
 
-        $states = Etat::all()->where('users_id', '==', Auth::id());
+        $states = Etat::with('location')->get()->where('users_id', '==', Auth::id());
         foreach ($states as $data){
 
             $data->photo = json_decode($data->photo);
@@ -36,7 +36,7 @@ class EtatController extends Controller
      */
     public function create()
     {
-        $locations = Location::all()->where('users_id', '==', Auth::id());
+        $locations = Location::with('bien')->get()->where('users_id', '==', Auth::id());
         return response()->json($locations);
     }
 
@@ -48,27 +48,40 @@ class EtatController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+
+
+        if($request->file('files') !== null ){
             $pictures = [];
-            foreach( $request->file('file') as $files ){
+
+            foreach( $request->file('files') as $files ){
 
                 $filename = '/image/'.$files->getClientOriginalName();
                 $files->move(public_path('image'),$filename);
                 $pictures[] = $filename;
             }
 
-        $desc = $request['description'];
-        $local = $request['location'];
 
             $tore = Etat::create([
 
-                'description' => $desc,
-                    'location_id' =>$local,
-                    'users_id' => Auth::id(),
-                  'photo' => json_encode($pictures),
+                'description' => $request['description'],
+                'location_id' =>$request['location_lier'],
+                'users_id' => Auth::id(),
+                'photo' => json_encode($pictures),
             ]);
 
-            return response()->json(['message' => 'hfhfkshfhsjkhks']);
+        }else{
+
+            $tore = Etat::create([
+
+                'description' => $request['description'],
+                'location_id' =>$request['location_lier'],
+                'users_id' => Auth::id(),
+                // 'photo' => json_encode($pictures),
+            ]);
+
+        }
+
+        return response()->json(['message' => 'succeé']);
 
 
 

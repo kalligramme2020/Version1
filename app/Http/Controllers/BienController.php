@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeleteEvent;
+use App\Events\statutEvent;
 use App\Models\Bien;
 use App\Models\Piece;
 use Illuminate\Http\Request;
@@ -17,9 +19,15 @@ class BienController extends Controller
      */
     public function index()
     {
-        $biens = Bien::with('parentid')->where('users_id', '=', Auth::id())
-            ->paginate(2);
+        $today = date("Y-m-d");
+
+        $biens = Bien::with( 'locations','locataire','tbien','parentid')
+            ->where('users_id', '=', Auth::id())
+
+            ->paginate(4);
+
         return response()->json($biens);
+
     }
 
     /**
@@ -29,7 +37,8 @@ class BienController extends Controller
      */
     public function create()
     {
-        $biens = Bien::with('parentid')->get()->where('users_id', '==', Auth::id());
+        $biens = Bien::with('parentid')->get()
+                        ->where('users_id', '==', Auth::id());
 
         return response()->json($biens);
     }
@@ -51,6 +60,7 @@ class BienController extends Controller
 //            $request->file->move(public_path('image'), $imageName);
             $image = $request->get('image');
             $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            $filePathname = '/image/'.$name;
             \Image::make($request->get('image'))->save(public_path('image/').$name);
 
             $databien = Bien::create([
@@ -67,7 +77,7 @@ class BienController extends Controller
                 'surface' => $request['surface'],
                 'addresse' => $request['addresse'],
                 'description' => $request['description'],
-                'photo' => $name,
+                'photos' => $filePathname,
             ]);
         }else{
             $databien = Bien::create([
@@ -156,6 +166,7 @@ class BienController extends Controller
 //            $request->file->move(public_path('image'), $imageName);
             $image = $request->get('image');
             $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            $filePathname = '/image/'.$name;
             \Image::make($request->get('image'))->save(public_path('image/').$name);
 
             $updatebien->update([
@@ -170,7 +181,7 @@ class BienController extends Controller
                 'surface' => $request['surface'],
                 'addresse' => $request['addresse'],
                 'description' => $request['description'],
-                'photo' => $name,
+                'photos' => $filePathname,
             ]);
         }else{
             $updatebien->update([
@@ -221,10 +232,9 @@ class BienController extends Controller
     {
         $delete = Bien::find($id);
         $delete->pieces()->detach();
-
+        $events = new DeleteEvent($delete->id);
+        event($events);
         $delete->delete();
-        return response()->json([
-            'messages' => 'supprimer'
-        ]);
+
     }
 }

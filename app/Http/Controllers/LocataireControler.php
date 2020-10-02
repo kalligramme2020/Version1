@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeleteEvent;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Locataire;
@@ -15,18 +16,13 @@ class LocataireControler extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    private function refresh(){
-        $tenants = Locataire::all()->where('users_id', '==', Auth::id());
-        return response()->json( $tenants );
-    }
-
     public function index()
     {
-                $tenants = Locataire::where('users_id', '=', Auth::id())
-                    ->orderBy('created_at','DESC')
-                    ->paginate(2);
 
-            return response()->json($tenants);
+        $tenants = Locataire::where('users_id', '=', Auth::id())
+                     ->orderBy('created_at','DESC')
+                     ->paginate(4);
+        return response()->json($tenants);
 
     }
 
@@ -37,7 +33,7 @@ class LocataireControler extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -48,6 +44,7 @@ class LocataireControler extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request,[
             'nom' => 'required|min:3',
             'cni' => 'required|min:3','email','unique:users',
@@ -55,11 +52,12 @@ class LocataireControler extends Controller
             'phone' => 'required|min:9,max:9'
         ]);
 
+
         if ( $request->get('image')) {
-//            $imageName = time() . '.' . $request->file->extension();
-//            $request->file->move(public_path('image'), $imageName);
+
             $image = $request->get('image');
             $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            $filePathname = '/image/'.$name;
             \Image::make($request->get('image'))->save(public_path('image/').$name);
 
             $store = Locataire::create([
@@ -72,9 +70,12 @@ class LocataireControler extends Controller
                 'profession' => $request['proff'],
                 'cni' => $request['cni'],
                 'nationalite' => $request['pays'],
-                'photo' => $name,
+                'photo' => $filePathname,
             ]);
-        }else {
+
+
+        }
+        else {
             $store = Locataire::create([
                 'users_id' => Auth::id(),
                 'nom' => $request['nom'],
@@ -91,7 +92,8 @@ class LocataireControler extends Controller
 
         }
 
-       return response()->json([
+
+        return response()->json([
            'messages' => 'le locataire a eté crééer avec succé',
        ]);
     }
@@ -139,10 +141,10 @@ class LocataireControler extends Controller
         ]);
 
         if ( $request->get('image')) {
-//            $imageName = time() . '.' . $request->file->extension();
-//            $request->file->move(public_path('image'), $imageName);
+
             $image = $request->get('image');
             $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            $filePathname = '/image/'.$name;
             \Image::make($request->get('image'))->save(public_path('image/').$name);
 
             $tenantUp->update([
@@ -154,7 +156,7 @@ class LocataireControler extends Controller
                 'profession' => $request['proff'],
                 'cni' => $request['cni'],
                 'nationalite' => $request['pays'],
-                'photo' => $name,
+                'photo' => $filePathname,
             ]);
 
         }
@@ -185,8 +187,12 @@ class LocataireControler extends Controller
      */
     public function destroy($id)
     {
-        $tenant = Locataire::find($id);
-        $tenant->delete();
-        return $this->refresh();
+        $delete = Locataire::find($id);
+
+        $events = new DeleteEvent($id);
+        event($events);
+
+        $delete->delete();
+
     }
 }

@@ -1,26 +1,38 @@
 require('./bootstrap');
-
+var moment = require('moment');
 import Vue from 'vue'
+
+import Echo from "laravel-echo"
+
+
+window.io = require('socket.io-client');
+
+window.Echo = new Echo({
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001'
+});
+
+
 import VueRouter from 'vue-router'
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 import FlashMessage from '@smartweb/vue-flash-message';
 Vue.use(FlashMessage);
 
 import VueLazyload from 'vue-lazyload'
-Vue.use(VueLazyload)
+Vue.use(VueLazyload);
 
 
 import VueMoment from 'vue-moment'
-Vue.use(VueMoment)
+Vue.use(VueMoment);
 
 import VueConfirmDialog from 'vue-confirm-dialog'
-Vue.use(VueConfirmDialog)
+Vue.use(VueConfirmDialog);
 
 
 window.Vue = require('vue');
 Vue.component('pagination', require('laravel-vue-pagination'));
-Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('add-tenant', require('./tenant/Tenants.vue').default);
 
@@ -36,6 +48,8 @@ import  Bien from './house/Bien.vue';
 import  newBien from './house/Newbien.vue';
 import  editbien from './house/Editbien.vue';
 import  showbien from './house/Showbien.vue';
+
+import  immeuble from './immeubles/Immeuble.vue';
 
 //GESTION DE LOCATION//
 import  rent from './rentale/rental.vue';
@@ -57,6 +71,7 @@ import user from './user/User';
 
 
 
+
 const routes = [
 
     //Gestion ds user
@@ -66,7 +81,7 @@ const routes = [
         component:user
     },
 
-    //GEstion des etats de lieux
+    //Gestion des etats de lieux
     {
       path:"/state",
         component:etatlieux
@@ -105,7 +120,7 @@ const routes = [
         name: 'showtenant'
     },
 
-    //GESTION desbien
+    //GESTION des bien
 
     {
         path:"/bien",
@@ -128,6 +143,13 @@ const routes = [
         component: showbien,
         name: 'showbien'
     },
+
+    {
+        path:'/immeubles',
+        component: immeuble,
+    },
+
+
 
     //gestion des location//
 

@@ -60,6 +60,7 @@
                                     <input type="number" class="form-control" id="air" v-model="edithouse.surface">
                                 </div>
                                 <div class="form-group col-md-8">
+                                    <label for="air">description</label>
                                     <textarea class="form-control" placeholder="description" rows="3" v-model="edithouse.description"></textarea>
                                 </div>
                             </div>
@@ -75,7 +76,8 @@
                                 <div style="z-index:2000"> <FlashMessage></FlashMessage></div>
 
                                 <div class="form-group col-md-6">
-                                    <img :src="profil" alt="Image" width="150">
+                                    <img v-if="profil !== null" :src="profil" alt="Image" width="150">
+                                     <img v-else :src="edithouse.photos" alt="Image" width="150">
                                 </div>
                             </div>
                         </div>
@@ -245,7 +247,7 @@
                         // console.log(response.data);
                         if (response.data){
                             this.flashMessage.success({
-                                title: 'Modifier locataire',
+                                title: 'Modifier bien',
                                 message: 'Modification terminé',
                                 time: 3050,
                                 flashMessageStyle: {

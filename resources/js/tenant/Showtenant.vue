@@ -9,7 +9,8 @@ import Swal from "sweetalert2";
                     </div>
                     <div class="row no-gutters ">
                         <div class="col-md-4 border-right">
-                            <img :src=" avatar(tenant.photo) " alt="" width="250">
+                            <img :src="tenant.photo " alt=""  width="220">
+
 
                         </div>
                         <div class="col-md-8">
@@ -97,12 +98,6 @@ import Swal from "sweetalert2";
         },
 
         methods:{
-
-            avatar(photo){
-                // console.log(photo)
-                return "image/" + photo
-            },
-
             deletetenant(id){
                 Swal.fire({
                     text: "Etes-vous de cette action !",

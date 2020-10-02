@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\NewUserAccount;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -20,3 +23,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/mailNotif', 'TenantNotificationController@getTenantsNotify');
+
+Route::get('login/google', 'Auth\LoginController@redirectToProvider');
+
+Route::get('login/google/callback', 'Auth\LoginController@handleProviderCallback');
