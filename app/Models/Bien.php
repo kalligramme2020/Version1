@@ -8,7 +8,7 @@ class Bien extends Model
 {
     protected $fillable = [
         'bien_id', 'type_bien_id','FinBail','statut',
-        'users_id', 'name','ville','pays_id', 'addresse','surface', 'description','photos','region'
+        'users_id', 'name','ville','pays_id', 'addresse','surface', 'description','photo','region'
     ];
 
     protected $table = 'bien';

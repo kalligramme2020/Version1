@@ -77,7 +77,7 @@ class BienController extends Controller
                 'surface' => $request['surface'],
                 'addresse' => $request['addresse'],
                 'description' => $request['description'],
-                'photos' => $filePathname,
+                'photo' => $filePathname,
             ]);
         }else{
             $databien = Bien::create([
@@ -181,7 +181,7 @@ class BienController extends Controller
                 'surface' => $request['surface'],
                 'addresse' => $request['addresse'],
                 'description' => $request['description'],
-                'photos' => $filePathname,
+                'photo' => $filePathname,
             ]);
         }else{
             $updatebien->update([

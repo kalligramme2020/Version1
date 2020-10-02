@@ -54,7 +54,7 @@
                                 <tbody v-for=" bien in biens" :key="bien.id">
                                 <tr v-if="bien.tbien.name !== 'Immeuble' ">
                                     <td>
-                                        <img :src="bien.photos " alt="" class="avatar">
+                                        <img :src="bien.photo " alt="" class="avatar">
                                     </td>
                                     <td>
                                         <router-link :to="{ name: 'showbien', params: { id: bien.id }}" class="text-primary">{{bien.name}}</router-link><br>

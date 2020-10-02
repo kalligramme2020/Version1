@@ -82276,7 +82276,7 @@ var render = function() {
                               _c("td", [
                                 _c("img", {
                                   staticClass: "avatar",
-                                  attrs: { src: bien.photos, alt: "" }
+                                  attrs: { src: bien.photo, alt: "" }
                                 })
                               ]),
                               _vm._v(" "),
@@ -82916,7 +82916,7 @@ var render = function() {
                       })
                     : _c("img", {
                         attrs: {
-                          src: _vm.edithouse.photos,
+                          src: _vm.edithouse.photo,
                           alt: "Image",
                           width: "150"
                         }
@@ -84151,7 +84151,7 @@ var render = function() {
               _c("div", { staticClass: "col-md-4" }, [
                 _c("img", {
                   attrs: {
-                    src: _vm.bien.photos,
+                    src: _vm.bien.photo,
                     alt: "",
                     width: "100%",
                     height: "250"

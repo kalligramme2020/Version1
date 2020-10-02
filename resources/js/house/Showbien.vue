@@ -24,7 +24,7 @@ import Swal from "sweetalert2";
             <div class="card mb-3 col-md-12" v-for="piece in pieces">
                 <div class="row no-gutters">
                     <div class="col-md-4">
-                        <img :src="bien.photos " alt="" width="100%" height="250">
+                        <img :src="bien.photo " alt="" width="100%" height="250">
 
                             <ul class="list-group mt-4" @click="getparentBiendata(bienParent.id)" v-if="bienParent !== null">
                                 <a href="#" class="list-group-item pointer-event d-flex justify-content-between align-items-center">

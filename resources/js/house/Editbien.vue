@@ -77,7 +77,7 @@
 
                                 <div class="form-group col-md-6">
                                     <img v-if="profil !== null" :src="profil" alt="Image" width="150">
-                                     <img v-else :src="edithouse.photos" alt="Image" width="150">
+                                     <img v-else :src="edithouse.photo" alt="Image" width="150">
                                 </div>
                             </div>
                         </div>
