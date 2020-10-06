@@ -248,19 +248,20 @@
                     image:this.profil
                 })
                     .then((response)=>{
-                        if (response.data || status){
+                        if (response.data === 200){
                             this.flashMessage.success({
                                 title: 'Nouveau bien',
                                 message: 'Enregistrement terminé',
                                 time: 3000,
                                 flashMessageStyle: {
                                     backgroundColor: 'linear-gradient(#e66465, #9198e5)',
-
                                 }
 
                             });
                         } else {
-                            this.flashMessage.error({title: 'oups', message: 'probleme rencontré'});
+                            this.flashMessage.error({
+                                title: 'oups',
+                                message: 'probleme rencontré veiller tenter plus tard'});
                         }
                     })
                     .then(

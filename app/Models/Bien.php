@@ -12,6 +12,10 @@ class Bien extends Model
     ];
 
     protected $table = 'bien';
+    /**
+     * @var mixed|string
+     */
+
 
     public function pieces()
     {
@@ -55,6 +59,30 @@ class Bien extends Model
     {
         return $this->hasMany('App\Models\Location' , 'bien_id');
     }
+
+    public function getStatutAttribute()
+    {
+        if($this->locations->count() )
+        {
+            foreach ($this->locations as $location)
+            {
+                if ( strtotime($location->fin_bail) > strtotime(date("Y-m-d")) )
+                {
+                     return $this->statut = "Occupé";
+                }
+                else
+                {
+                    return $this->statut = "Disponible";
+                }
+            }
+        }
+        else
+        {
+            return $this->statut = "dispo";
+
+        }
+    }
+
 
 
 }

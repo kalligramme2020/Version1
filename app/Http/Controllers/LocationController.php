@@ -38,7 +38,9 @@ class LocationController extends Controller
     public function create()
     {
         $locataires = Locataire::all()->where('users_id', '==', Auth::id());
-        $biens = Bien::with('pieces', 'locations', 'tbien')->get()->where('users_id', '==', Auth::id());
+        $biens = Bien::with('pieces', 'locations', 'tbien')
+            ->get()
+            ->where('users_id', '==', Auth::id() And 'statut', '!==', 'Occupé');
 
 
         return response()->json([
@@ -55,8 +57,6 @@ class LocationController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $Addlocation = Location::create([
             'locataire_id' => $request['locataire_id'],
             'users_id' => Auth::id(),
@@ -74,9 +74,9 @@ class LocationController extends Controller
             'identifiant' => $request['identifiant'],
             'garantir' => $request['garantir'],
             'payment_date' => $request['paiement_date'],
-
+            'duree_bail' => $request['duree_bail']
         ]);
-
+        return response()->json(200 );
     }
 
     /**
@@ -87,7 +87,7 @@ class LocationController extends Controller
      */
     public function show($id)
     {
-        $showlocation = Location::with('bailler','locataire', 'etats' , 'bien')->find($id);
+        $showlocation = Location::with('baillieur','locataire', 'etats' , 'bien')->find($id);
 //        dd($showlocation);
         return response()->json($showlocation);
     }
@@ -133,8 +133,9 @@ class LocationController extends Controller
             'identifiant' => $request['identifiant'],
             'garantir' => $request['garantir'],
             'payment_date' => $request['paiement_date'],
+            'duree_bail' => $request['duree_bail']
         ]);
-        return response()->json(['messsage' => 'dkljlkjdflkjkldjl']);
+        return response()->json(200);
 
     }
 
@@ -154,7 +155,7 @@ class LocationController extends Controller
 //        $location->etats()->delete();
         $delete->paiments()->delete();
         $delete->delete();
-
+        return response()->json(200);
     }
 
 

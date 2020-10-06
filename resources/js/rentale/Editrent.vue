@@ -31,9 +31,10 @@
                         </div>
 
                         <div class="card-header">detail de location</div>
-                         <FlashMessage class="flashmessage"></FlashMessage>
 
                         <div class="card-body">
+                            <FlashMessage class="flashmessage"></FlashMessage>
+
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="ident">identifiant</label>
@@ -74,15 +75,22 @@
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    <label for="start">debut du bail</label>
-                                    <input type="date" class="form-control" id="start" v-model="editrent.debut_bail">
+                                    <label for="toDate">debut du bail</label>
+                                    <input type="date" class="form-control" name="toDate" id="toDate" v-model="editrent.debut_bail">
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    <label for="end">fin du bail</label>
-                                    <input type="date" v-model="editrent.fin_bail" class="form-control" id="end" >
+                                    <label for="fromDate">fin du bail</label>
+                                    <input type="date" v-model="editrent.fin_bail" class="form-control" name="fromDate" id="fromDate" >
                                 </div>
 
+                                <div class="form-group col-md-6" >
+                                    <label for="result">Duree du bail</label>
+                                    <input type="button"  name="calculate" id="dura" value="Calculer" @click="calculate()" /> :
+                                </div>
+                                <div class="form-group col-md-6" >
+                                    <input type="text" class="form-control" id="result" v-model="editrent.duree_bail">
+                                </div>
 
                             </div>
                         </div>
@@ -179,7 +187,7 @@
             return{
                 editrent:{
                     'locataire_id':"", 'loyer_hc':"",'loyer_ac':"",'debut_bail':"",
-                    "payment_date":'','fin_bail':"",'typebail':'',
+                    "payment_date":'','fin_bail':"",'typebail':'','duration':""
                 },
                 bienedit:{'id':"", 'name':""} ,locataire:{'id':"", 'nom':""},
 
@@ -224,11 +232,13 @@
                     typebail:this.editrent.typebail,
                     paiement_date:this.editrent.payment_date,
                     garantir:this.editrent.garantir,
-                    charge:this.editrent.charge
+                    charge:this.editrent.charge,
+                    duree_bail:this.editrent.duration
+
                 })
                     .then( (response) => {
                         // console.log(response.data);
-                        if (response.data){
+                        if (response.data === 200){
                             this.flashMessage.success({
                                 title: 'Location modifier',
                                 message: 'Modification terminé',
@@ -240,7 +250,9 @@
                             });
                         }
                         else{
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                            this.flashMessage.error({
+                                title: 'Oups',
+                                message: "une erreur c'est produite tenter a nouveau " });
                         }
                     })
                     .then(
@@ -250,7 +262,62 @@
                         this.editrent.debutb="", this.editrent.finb="", this.typebail="",
                         this.editrent.paiement_date="", this.editrent.garantir="", this.editrent.garantir="",
                     )
+            },
+
+            calculate(){
+                var fromDate = this.editrent.debut_bail;
+                var toDate = this.editrent.fin_bail;
+
+                try {
+                    document.getElementById('result').innerHTML = '';
+
+                    var result = this.getDateDifference(new Date(fromDate), new Date(toDate));
+
+                    if (result && !isNaN(result.years)) {
+                        document.getElementById('result').value =
+                            result.years + ' an' + (result.years === 1 ? ' ' : 's ') +
+                            result.months + ' moi' + (result.months === 1 ? ' ' : 's ') + 'et ' +
+                            result.days + ' jour' + (result.days === 1 ? '' : 's');
+                        this.editrent.duration = document.getElementById('result').value;
+
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+
+            getDateDifference(startDate, endDate){
+                if (startDate > endDate) {
+                    console.error('Start date must be before end date');
+                    return null;
+                }
+                var startYear = startDate.getFullYear();
+                var startMonth = startDate.getMonth();
+                var startDay = startDate.getDate();
+
+                var endYear = endDate.getFullYear();
+                var endMonth = endDate.getMonth();
+                var endDay = endDate.getDate();
+
+                // We calculate February based on end year as it might be a leep year which might influence the number of days.
+                var february = (endYear % 4 === 0 && endYear % 100 !== 0) || endYear % 400 === 0 ? 29 : 28;
+                var daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+                var startDateNotPassedInEndYear = (endMonth < startMonth) || endMonth === startMonth && endDay < startDay;
+                var years = endYear - startYear - (startDateNotPassedInEndYear ? 1 : 0);
+
+                var months = (12 + endMonth - startMonth - (endDay < startDay ? 1 : 0)) % 12;
+
+                // (12 + ...) % 12 makes sure index is always between 0 and 11
+                var days = startDay <= endDay ? endDay - startDay : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
+
+                return {
+                    years: years,
+                    months: months,
+                    days: days
+                };
             }
+
         }
     }
 </script>

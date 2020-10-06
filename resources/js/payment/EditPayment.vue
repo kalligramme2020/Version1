@@ -147,7 +147,7 @@
                 })
                     .then((response)=>{
                         // console.log(response.data);
-                        if (response.data){
+                        if (response.data === 200){
                             this.flashMessage.success({
                                 title: 'modifier facture',
                                 message: 'Enregistrement terminé',
@@ -157,7 +157,9 @@
                                 }
                             });
                         } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                            this.flashMessage.error({
+                                title: 'Oupss',
+                                message: 'un probleme rencontrer tenter plus tard svp'});
                         }
                     })
                     .then(

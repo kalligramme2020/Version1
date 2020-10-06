@@ -1,4 +1,3 @@
-import Swal from "sweetalert2";
 <template>
     <div id="content">
         <router-view></router-view>
@@ -8,9 +7,6 @@ import Swal from "sweetalert2";
                     <div class="card">
                         <div class="card-body">
                             <FlashMessage></FlashMessage>
-                            <div class="card text-center" v-if="loading">
-                                <h1><span class="fas fa-spinner fa-pulse"></span></h1>
-                            </div>
                         </div>
 
                     </div>
@@ -33,7 +29,7 @@ import Swal from "sweetalert2";
                                     Nouvel transaction <i class="fa fa-chevron-down" aria-hidden="true"></i>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                    <router-link to="/newpayment" class="dropdown-item text-primary"><i class="fa fa-eur" aria-hidden="true"></i> ajouter un revenue</router-link>
+                                    <router-link to="/newpayment" class="dropdown-item text-primary"><i class="fas fa-coins fa-lg"></i> ajouter un revenue</router-link>
                                     <button class="dropdown-item" type="button">Another action</button>
                                 </div>
                             </div>
@@ -105,15 +101,22 @@ import Swal from "sweetalert2";
             return  {
                 metainvoice:{},
                 keyword:null,
-                loading:true
             }
         },
+
+        mounted(){
+            Echo.channel('Tenant')
+                .listen('.App\\Events\\DeleteEvent', (e) => {
+                    console.log(e);
+                    this.invoices.splice(this.invoices.indexOf(e.delete), 1);
+                });
+        },
+
         created(){
             axios.get('api/payment')
                 .then((response)=>{
-                    // console.log(response.data);
+                    console.log(response.data);
                     this.metainvoice = response.data;
-                    this.loading = false
                 })
         },
 
@@ -131,12 +134,12 @@ import Swal from "sweetalert2";
                     if (result.value) {
                         axios.delete('api/payment/' + id)
                             .then((response) => {
-
+                                if (response.data === 200)
+                                    Swal.fire(
+                                        'Supprimer',
+                                        'success'
+                                    )
                             });
-                        Swal.fire(
-                            'Supprimer',
-                            'success'
-                        )
                     }
                 })
             },

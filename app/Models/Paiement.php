@@ -15,4 +15,9 @@ class Paiement extends Model
     {
         return $this->belongsTo('App\Models\Location', 'location_id');
     }
+
+    public function  locataire()
+    {
+        return $this->belongsTo('App\Models\Locataire', 'Locataire_id');
+    }
 }

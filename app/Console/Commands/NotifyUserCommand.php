@@ -50,10 +50,14 @@ class NotifyUserCommand extends Command
 
             $mod_date = strtotime($location->fin_bail."- 28 days"); //jour a paitir du quel la notification sera declacher j-j 30
 
-
             if( $finBail_time > time())
+            {
                 if (date("Y-m-d",$mod_date) )
-                $location->baillieur->notify (new UserEmailNotfy( $locataire , $bien));
+                {
+                    $location->baillieur->notify(new UserEmailNotfy( $locataire , $bien));
+                }
+            }
+
 
         }
 

@@ -45,7 +45,6 @@
                                     <th scope="col">bien</th>
                                     <th scope="col">type</th>
                                     <th scope="col">Superficie m²</th>
-                                    <th scope="col">Statut</th>
                                     <th scope="col"> action </th>
                                 </tr>
                                 </thead>
@@ -53,7 +52,7 @@
                                 <tbody v-for=" bien in biens" :key="bien.id">
                                 <tr v-if="bien.tbien.name === 'Immeuble' ">
                                     <td>
-                                        <img :src="bien.photos " alt="" class="avatar">
+                                        <img :src="bien.photo " alt="" class="avatar">
                                     </td>
                                     <td>
                                         <router-link :to="{ name: 'showbien', params: { id: bien.id }}" class="text-primary">{{bien.name}}</router-link><br>
@@ -63,16 +62,6 @@
                                     <td>{{bien.tbien.name}}</td>
 
                                     <td>{{bien.surface}}</td>
-
-                                    <td v-if="bien.locations == 0"><span class="badge badge-warning badge-pill">Disponible</span></td>
-                                    <td v-else>
-                                        <p v-for="statut in bien.locations" :key="statut.id">
-                                            <span v-if=" statut.fin_bail !== null && new Date().toISOString() < statut.fin_bail" class="badge badge-success badge-pill">
-                                                Occuper
-                                            </span>
-                                            <span v-else class="badge badge-warning badge-pill">Disponible</span>
-                                        </p>
-                                    </td>
                                     <th class="text-center">
                                         <div class="btn-group">
                                             <button class="btn btn-secondary btn-sm " type="button" data-toggle="dropdown" aria-expanded="false">
@@ -160,12 +149,12 @@ name: "Immeuble",
                 if (result.value) {
                     axios.delete('api/bien/' + id)
                         .then((response) => {
-
+                            if (response.data === 200)
+                                Swal.fire(
+                                    'Supprimer',
+                                    'success'
+                                )
                         })
-                    Swal.fire(
-                        'Supprimer',
-                        'success'
-                    )
                 }
             })
         },

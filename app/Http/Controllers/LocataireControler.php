@@ -18,6 +18,7 @@ class LocataireControler extends Controller
 
     public function index()
     {
+//        dd($month = date('m'));
 
         $tenants = Locataire::where('users_id', '=', Auth::id())
                      ->orderBy('created_at','DESC')
@@ -93,9 +94,7 @@ class LocataireControler extends Controller
         }
 
 
-        return response()->json([
-           'messages' => 'le locataire a eté crééer avec succé',
-       ]);
+        return response()->json(200);
     }
 
     /**
@@ -173,10 +172,7 @@ class LocataireControler extends Controller
             ]);
         }
 
-        return response()->json([
-            'messages' => 'le locataire a eté modifier avec succé',
-
-        ]);
+        return response()->json(200);
     }
 
     /**
@@ -187,12 +183,34 @@ class LocataireControler extends Controller
      */
     public function destroy($id)
     {
-        $delete = Locataire::find($id);
+        $delete = Locataire::with('locations')->find($id);
+        if (count($delete->locations))
+        {
+            foreach ($delete->locations as  $location)
+            {
+                if (strtotime($location->fin_bail) > strtotime(date("Y-m-d")))
+                {
+                    return response()->json(405);
 
-        $events = new DeleteEvent($id);
-        event($events);
+                }
+                else
+                {
+                    $events = new DeleteEvent($id);
+                    event($events);
+                    $delete->delete();
+                    return response()->json(200);
+                }
+            }
+        }
+        else
+        {
+            $events = new DeleteEvent($id);
+            event($events);
+            $delete->delete();
+            return response()->json(200);
+        }
 
-        $delete->delete();
+
 
     }
 }

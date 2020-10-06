@@ -15,15 +15,17 @@
                             <tr>
                                 <th scope="col">location</th>
                                 <th scope="col">Etats</th>
-                                <th scope="col">descriptio</th>
+                                <th scope="col">Voir</th>
                                 <th scope="col">action</th>
                             </tr>
                             </thead>
                             <tbody v-for="(state,index) in getSate " :key="index">
                             <tr>
-                                <th scope="row">{{state.location.identifiant}}</th>
+                                <th scope="row">
+                                    <router-link to="#">{{state.location.identifiant}}</router-link>
+                                </th>
                                 <td> <img v-for=" (img, index) in state.photo " :src="img" width="100" height="100" class="ml-2">  </td>
-                                <td>{{state.description}}</td>
+                                <td></td>
 
                                 <td>
                                     <i @click="deleteEtat(state.id)" class="fas fa-trash-alt fa-lg pointer-event" type="button"></i>

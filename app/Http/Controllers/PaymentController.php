@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeleteEvent;
 use App\Models\Bien;
 use App\Models\Locataire;
 use App\Models\Location;
@@ -19,7 +20,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Paiement::with('location')->where('bailleur' , '=' ,Auth::id())->paginate(2);
+        $payments = Paiement::with('locataire','location')->where('bailleur' , '=' ,Auth::id())->paginate(2);
         return response()->json($payments);
     }
 
@@ -30,8 +31,9 @@ class PaymentController extends Controller
      */
     public function create()
     {
-//        $rentals = Location::all()->where('users_id' , '== ', Auth::id());
-        $rentals = Location::with('bien', 'locataire')->get()->where('users_id' ,'==' , Auth::id());
+        $rentals = Location::with('bien', 'locataire')
+            ->get()
+            ->where(   'users_id' ,'=' , Auth::id()  );
         return response()->json($rentals);
 
     }
@@ -60,9 +62,7 @@ class PaymentController extends Controller
 
         ]);
 
-        return  response()->json([
-            'message' => 'facture enregistrée'
-        ]);
+        return  response()->json(200);
 
     }
 
@@ -120,9 +120,7 @@ class PaymentController extends Controller
             'description' => $request['description'],
         ]);
 
-        response()->json([
-            'message' => 'lkfjglfdjlgdjl'
-        ]);
+        return  response()->json(200);
     }
 
     /**
@@ -134,10 +132,10 @@ class PaymentController extends Controller
     public function destroy($id)
     {
         $invoice = Paiement::find($id);
+        $events = new DeleteEvent($invoice->id);
+        event($events);
         $invoice->delete();
-        return response()->json([
-            'messages' => 'supprimer'
-        ]);
+        return  response()->json(200);
     }
 
 }

@@ -143,7 +143,7 @@
 
                     .then((response)=>{
                         // console.log(response.data);
-                        if (response.data){
+                        if (response.data === 200){
                             this.flashMessage.success({
                                 title: 'Modifier locataire',
                                 message: 'Modification terminé',
@@ -154,7 +154,9 @@
                                 }
                             });
                         } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                            this.flashMessage.error({
+                                title: 'Error Message Title',
+                                message: 'probleme rencontré veiller tenter plus tard'});
                         }
                     })
                     .then(

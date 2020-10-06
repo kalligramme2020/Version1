@@ -11,6 +11,7 @@ class Location extends Model
     protected $fillable =['type_bail','bien_id', 'locataire_id', 'users_id','debut_bail', 'fin_bail','residence1','residence2',
         'loyer_hc','charge', 'loyer_ac','garantir','description','echeance','activite','activite', 'payment_date','statut',
         'activiter_proprio','activiter_locataire','conditions','montant_proprio','montant_locataire','charge','identifiant','montant',
+        'duree_bail'
 
     ];
 
@@ -57,6 +58,17 @@ class Location extends Model
         return $this->belongsTo('App\Models\Locataire' , 'locataire_id');
     }
 
+    public function getStatutAttribute()
+    {
+        if ( strtotime($this->fin_bail) > strtotime(date("Y-m-d")))
+        {
+            return $this->statut = 'En cour';
+        }
+        else
+        {
+            return $this->statut = 'Termeé';
+        }
+    }
 
 
 }

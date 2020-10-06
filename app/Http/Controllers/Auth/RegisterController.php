@@ -74,7 +74,7 @@ class RegisterController extends Controller
 
         ]);
 
-        Mail::to($data['email'])->queue( new NewUserAccount($data['name'] , $data['email']));
+        Mail::to($data['email'])->send( new NewUserAccount($data['name'] , $data['email']));
 
         return $newUser;
 

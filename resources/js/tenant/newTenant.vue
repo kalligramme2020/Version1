@@ -40,10 +40,18 @@
                             </div>
 
                             <div class="form-row">
+<!--                                <div class="form-group col-md-6">-->
+<!--                                    <label for="pays">nationalité</label>-->
+<!--                                    <input type="text" class="form-control" id="pays" v-model="Newtenant.pays" required>-->
+<!--                                </div>-->
                                 <div class="form-group col-md-6">
-                                    <label for="pays">nationalité</label>
-                                    <input type="text" class="form-control" id="pays" v-model="Newtenant.pays" required>
+                                    <label for="pays">pays <i class="fa fa-flag-checkered" aria-hidden="true"></i></label>
+                                    <select class="form-control" id="pays" v-model="Newtenant.pays">
+                                        <option></option>
+                                        <option v-for="countrie in countries" v-bind:value="countrie.pays">{{ countrie.pays }}</option>
+                                    </select>
                                 </div>
+
                                 <div class="form-group col-md-6">
                                     <label for="cni">Numero CNI</label>
                                     <input type="number" class="form-control" id="cni" v-model="Newtenant.cni">
@@ -102,9 +110,16 @@
                     'prenom':"",
                     'cni':""
                 },
-
+                countries:null,
                 profil: null //GET IMG profil
             }
+        },
+
+        created() {
+            axios.get('api/pays')
+                .then((response )=> {
+                    this.countries= response.data.land;
+                });
         },
 
         methods:{
@@ -133,7 +148,7 @@
                 })
               .then((response)=>{
                     // console.log(response.data);
-                    if (response.data){
+                    if (response.data === 200){
                         this.flashMessage.success({
                             title: 'Nouveau locataire',
                             message: 'Enregistrement terminé',
@@ -145,7 +160,9 @@
                         });
                     }
                     else {
-                        this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                        this.flashMessage.error({
+                            title: 'Oupss',
+                            message: 'probleme rencontré veiller tenter plus tard'});
                     }
                 })
                 .then(

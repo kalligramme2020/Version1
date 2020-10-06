@@ -38,6 +38,7 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
+                            <FlashMessage class="flashmessage"></FlashMessage>
 
                             <table class="table table-striped table-bordered" style="width:100%">
                                 <thead class=" text-center">
@@ -64,16 +65,10 @@
                                     <td>{{bien.tbien.name}}</td>
 
                                     <td>{{bien.surface}}</td>
-                                    <td v-if="bien.locations == 0"><span class="badge badge-warning badge-pill">Disponible</span></td>
-                                    <td v-else>
-                                        <p v-for="statut in bien.locations" :key="statut.id">
-                                            <span v-if=" statut.fin_bail !== null && currentDate < statut.fin_bail" class="badge badge-success badge-pill">
-                                                Occuper
-                                            </span>
-                                            <span v-else class="badge badge-warning badge-pill">Disponible</span>
-                                        </p>
+                                    <td>
+                                        <span class="badge badge-success" v-if="bien.statut === 'Occupé' ">{{bien.statut}}</span>
+                                        <span class="badge badge-info" v-else>{{bien.statut}}</span>
                                     </td>
-
                                     <th class="text-center">
                                         <div class="btn-group">
                                             <button class="btn btn-secondary btn-sm " type="button" data-toggle="dropdown" aria-expanded="false">
@@ -162,12 +157,28 @@
                     if (result.value) {
                         axios.delete('api/bien/' + id)
                             .then((response) => {
+                                if(response.data === 200)
+                                {
+                                    Swal.fire(
+                                        'Supprimer',
+                                        'success'
+                                    )
+                                }
+                               else if(response.data === 405)
+                                {
+                                    this.flashMessage.error({
+                                        title: 'oups',
+                                        message: "Vous ne pouvez supprimer ce bien car il comporte des sous biens veiles d'abord les supprimer. "});
+                                }
+                                else
+                                {
+                                    this.flashMessage.info({
+                                        title: 'oups',
+                                        message: "Vous ne pouvez supprimer ce bien car il fait l'objet d'une location en cour veillez d'abord le supprimer. "});
+                                }
 
                             })
-                        Swal.fire(
-                            'Supprimer',
-                            'success'
-                        )
+
                     }
                 })
             },
@@ -191,12 +202,6 @@
                 else
                     return this.metaBiens.data;
             },
-
-            statut(){
-                return this.metaBiens.data.locations
-            }
-
-
         }
     }
 </script>

@@ -245,18 +245,19 @@
 
                     .then((response)=>{
                         // console.log(response.data);
-                        if (response.data){
+                        if (response.data === 200){
                             this.flashMessage.success({
                                 title: 'Modifier bien',
                                 message: 'Modification terminé',
                                 time: 3050,
                                 flashMessageStyle: {
                                     backgroundColor: 'linear-gradient(#e66465, #9198e5)',
-
                                 }
                             });
                         } else {
-                            this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                            this.flashMessage.error({
+                                title: 'Ooooh',
+                                message: 'probleme rencontré veiller tenter plus tard'});
                         }
                     })
                     .then(

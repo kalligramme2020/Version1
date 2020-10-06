@@ -49,10 +49,18 @@ class TenantNotifyCommand extends Command
         foreach ($locations as $local){
 
             if ($local->locataire->id === $local->locataire_id && $local->bien->id === $local->bien_id)
+            {
                 if ($finBail_time > time())
+                {
                     if (date("Y-m-d",$mod_date))
+                    {
+                        Mail::to($local->locataire->email)->send( new MailToTenant($local));
 
-            Mail::to($local->locataire->email)->send( new MailToTenant($local));
+                    }
+                }
+            }
+
+
 
         }
     }

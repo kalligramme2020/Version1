@@ -105,13 +105,11 @@
         },
 
         mounted(){
-
             Echo.channel('Tenant')
                 .listen('.App\\Events\\DeleteEvent', (e) => {
                     console.log(e);
                     this.tenants.splice(this.tenants.indexOf(e.delete), 1);
                 });
-
         },
 
         created(){
@@ -137,11 +135,22 @@
                     if (result.value) {
                         axios.delete('api/tenants/' + id)
                             .then((response) => {
+                                if (response.data === 200)
+                                {
+                                    Swal.fire(
+                                        'Supprimer',
+                                        'success'
+                                    )
+                                }
+                                else
+                                {
+                                    this.flashMessage.error({
+                                        title: 'oups',
+                                        message: 'Vous ne pouver supprimer ce locataire car il fait l\'objet d\'une location en cour vous devrez d\'abord la supprimer'});
+                                }
+
                             });
-                        Swal.fire(
-                            'Supprimer',
-                            'success'
-                        )
+
                     }
                 })
 

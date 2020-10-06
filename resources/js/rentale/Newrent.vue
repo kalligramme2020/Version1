@@ -1,11 +1,8 @@
 <template>
     <div class="container-fluid">
-        <div class="card text-center" v-if="loading">
-            <h1><span class="fas fa-spinner fa-pulse"></span></h1>
-        </div>
 
         <div class = "page-header text-center">
-            <h4> Nouvel location.</h4>
+            <h4> Nouvelle location.</h4>
         </div>
         <div class="dropdown-divider"></div>
         <div class="row justify-content-center">
@@ -21,19 +18,7 @@
                                     <select class="form-control" id="bien" v-model="NewRent.bienlouer">
                                         <option></option>
                                         <option v-for="bien in biens" :key="bien.id" :value="bien.id" >
-                                            <div v-if="bien.locations == 0">{{bien.name}}
-                                                <span >Disponible</span>
-                                            </div>
-                                            <div v-else > {{bien.name}}
-                                                <p  v-for="statut in bien.locations" :key="statut.id">
-                                                    <samp v-if=" statut.fin_bail !== null && new Date().toISOString() < statut.fin_bail" class="text-danger">
-                                                        <span>Occuper</span>
-                                                    </samp>
-                                                     <samp v-else class="text-success">
-                                                         <span> Disponible</span>
-                                                     </samp>
-                                                </p>
-                                            </div>
+                                            <span>{{bien.name}}</span>
                                         </option>
                                     </select>
                                 </div>
@@ -90,19 +75,21 @@
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    <label for="start">debut du bail</label>
-                                    <input type="date" class="form-control" id="start" v-model="NewRent.debutb">
+                                    <label for="toDate">debut du bail</label>
+                                    <p><input type="date" class="form-control" name="toDate" id="toDate"  v-model="NewRent.debutb" /></p>
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    <label for="end">fin du bail</label>
-                                    <input type="date" class="form-control" id="end" v-model="NewRent.finb">
+                                    <label for="fromDate">fin du bail</label>
+                                    <p><input type="date" class="form-control" name="fromDate" id="fromDate" v-model="NewRent.finb"  /></p>
                                 </div>
 
-                                <div class="form-group col-md-4" >
-
-                                    <label for="ende">duree du contrat:<button @click="Date" class=" btn-primary btn-xs">calculer</button></label>
-                                    <input type="text" class="form-control" id="ende" v-model="NewRent.duration">
+                                <div class="form-group col-md-6" >
+                                    <label for="result">Duree du bail</label>
+                                    <input type="button"  name="calculate" id="dura" value="Calculer" @click="calculate()" /> :
+                                </div>
+                                <div class="form-group col-md-6" >
+                                    <input type="text" class="form-control" id="result" v-model="NewRent.duration" >
                                 </div>
 
 
@@ -206,10 +193,12 @@
                   'loyerac':"", 'loyerhc':"",'charge':"", 'paiement_date':"", 'garantir':"",
                   'description':"", 'duration':"",
               },
-                loading:true,
                 biens:"",
                 locataires:"" , //liste des bien et locataire
             }
+        },
+
+        mounted() {
         },
 
         created(){
@@ -218,7 +207,6 @@
                     this.biens = response.data.biens;
                     this.locataires = response.data.locataires;
                     console.log(this.biens)
-                    this.loading = false
 
                 })
         },
@@ -240,10 +228,11 @@
                     typebail:this.typebail,
                     paiement_date:this.NewRent.paiement_date,
                     garantir:this.NewRent.garantir,
-                    charge:this.NewRent.charge
+                    charge:this.NewRent.charge,
+                    duree_bail:this.NewRent.duration
                 })
                 .then((response)=>{
-                    if (response.data){
+                    if (response.data === 200){
                         this.flashMessage.success({
                             title: 'Nouvel location',
                             message: 'Enregistrement terminé',
@@ -253,7 +242,10 @@
                             }
                         });
                     } else {
-                        this.flashMessage.error({title: 'Error Message Title', message: 'xxxxxxxxxx'});
+                        this.flashMessage.info({
+                            title: 'Oooops',
+                            message: " Desoler vous ne pouver louer ce bien car il fait deja l'obet d'une location en cour. Merci ! "
+                        });
                     }
                 })
                 .then(
@@ -265,16 +257,68 @@
                 )
             },
 
-            Date(){
-                console.log(this.NewRent.duration)
+            calculate(){
+                var fromDate = this.NewRent.debutb;
+                var toDate = this.NewRent.finb;
 
+                try {
+                    document.getElementById('result').innerHTML = '';
+
+                    var result = this.getDateDifference(new Date(fromDate), new Date(toDate));
+
+                    if (result && !isNaN(result.years)) {
+
+                        document.getElementById('result').value =
+                            result.years + ' an' + (result.years === 1 ? ' ' : 's ') +
+                            result.months + ' moi' + (result.months === 1 ? ' ' : 's ') + 'et ' +
+                            result.days + ' jour' + (result.days === 1 ? '' : 's');
+                        this.NewRent.duration = document.getElementById('result').value;
+
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+
+            getDateDifference(startDate, endDate){
+                if (startDate > endDate) {
+                    console.error('Start date must be before end date');
+                    return null;
+                }
+                var startYear = startDate.getFullYear();
+                var startMonth = startDate.getMonth();
+                var startDay = startDate.getDate();
+
+                var endYear = endDate.getFullYear();
+                var endMonth = endDate.getMonth();
+                var endDay = endDate.getDate();
+
+                // We calculate February based on end year as it might be a leep year which might influence the number of days.
+                var february = (endYear % 4 === 0 && endYear % 100 !== 0) || endYear % 400 === 0 ? 29 : 28;
+                var daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+                var startDateNotPassedInEndYear = (endMonth < startMonth) || endMonth === startMonth && endDay < startDay;
+                var years = endYear - startYear - (startDateNotPassedInEndYear ? 1 : 0);
+
+                var months = (12 + endMonth - startMonth - (endDay < startDay ? 1 : 0)) % 12;
+
+                // (12 + ...) % 12 makes sure index is always between 0 and 11
+                var days = startDay <= endDay ? endDay - startDay : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
+
+                return {
+                    years: years,
+                    months: months,
+                    days: days
+                };
             }
         },
 
-
-
     }
+
+
+
 </script>
+
 
 <style scoped>
 

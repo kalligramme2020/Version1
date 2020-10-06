@@ -76,6 +76,7 @@
                     </div>
                 </div>
                 <button @click="deleteInvoice(invoice.id)" class="dropdown-item text-danger"> <i class="fas fa-trash-alt fa-sm "></i> suprimer</button>
+                <button @click="deleteInvoice(invoice.id)" class="dropdown-item text-danger"> <i class="fas fa-trash-alt fa-sm "></i> suprimer</button>
 
             </div>
         </div>

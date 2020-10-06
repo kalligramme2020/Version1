@@ -62,10 +62,7 @@
                                     <td>{{location.loyer_hc}}</td>
                                     <td>{{location.debut_bail}} - {{location.fin_bail}}</td>
 
-                                    <td v-if="location.fin_bail < new Date().toISOString()">
-                                        <span class="badge badge-warning badge-pill">Inactif</span>
-                                    </td>
-                                    <td v-else><span class="badge badge-danger badge-pill">Actif</span></td>
+                                    <td><span class="badge badge-success">{{location.statut}}</span></td>
 
                                     <th class="text-center">
                                         <div class="btn-group">
@@ -109,11 +106,13 @@
             return{
                 metalocations:{},
                 loading:true,
-                keyword:null
+                keyword:null,
+                currentDate:null,
             }
         },
 
         mounted(){
+            this.currentDate = moment().format("YYYY-MM-DD")
 
             Echo.channel('Tenant')
                 .listen('.App\\Events\\DeleteEvent', (e) => {
@@ -148,12 +147,13 @@
                     if (result.value) {
                         axios.delete('api/rentale/' + id)
                             .then((response) => {
-
+                                if (response.data)
+                                    Swal.fire(
+                                        'Supprimer',
+                                        'success'
+                                    )
                             })
-                        Swal.fire(
-                            'Supprimer',
-                            'success'
-                        )
+
                     }
                 })
             },

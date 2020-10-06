@@ -26,7 +26,7 @@ class BienController extends Controller
 
             ->paginate(4);
 
-        return response()->json($biens);
+             return response()->json($biens);
 
     }
 
@@ -56,17 +56,12 @@ class BienController extends Controller
             'typebien' => 'required',
         ]);
         if ( $request->get('image')) {
-//            $imageName = time() . '.' . $request->file->extension();
-//            $request->file->move(public_path('image'), $imageName);
             $image = $request->get('image');
             $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
             $filePathname = '/image/'.$name;
             \Image::make($request->get('image'))->save(public_path('image/').$name);
 
             $databien = Bien::create([
-
-
-
                 'bien_id' => $request['Parent_id'],
                 'users_id' => Auth::id(),
                 'type_bien_id' => $request['typebien'],
@@ -113,9 +108,7 @@ class BienController extends Controller
 
         $databien->pieces()->attach($datapiece);
 
-        return response()->json([
-            'messages' => 'le bien a eté crééer avec succé',
-        ]);
+        return response()->json(200);
 
 
     }
@@ -130,7 +123,6 @@ class BienController extends Controller
     {
         $showbien = Bien::with('pieces','tbien','parentid', 'enfantsid')->find($id);
         return response()->json($showbien);
-
     }
 
     /**
@@ -155,7 +147,6 @@ class BienController extends Controller
     public function update(Request $request, $id)
     {
         $updatebien = Bien::find($id);
-
         $this->validate($request,[
             'name' => 'required|min:3',
             'typebien' => 'required',
@@ -217,9 +208,7 @@ class BienController extends Controller
 
 //        $updatebien->pieces()->attach($datapiece);
 
-        return response()->json([
-            'messages' => 'le  avec succé',
-        ]);
+        return response()->json(200);
     }
 
     /**
@@ -230,11 +219,37 @@ class BienController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Bien::find($id);
-        $delete->pieces()->detach();
-        $events = new DeleteEvent($delete->id);
-        event($events);
-        $delete->delete();
+        $delete = Bien::with('enfantsid','locations')->find($id);
+            if (count($delete->enfantsid))
+            {
+                return response()->json(405);
 
+            }
+            elseif(count($delete->locations))
+            {
+                    foreach ($delete->locations as $location)
+                    {
+                        if (strtotime($location->fin_bail) > strtotime(date("Y-m-d")))
+                        {
+                            dd('oui c en cour ');
+                        }
+                        elseif(strtotime($location->fin_bail) < strtotime(date("Y-m-d")))
+                        {
+                            $delete->pieces()->detach();
+                            $events = new DeleteEvent($delete->id);
+                            event($events);
+                            $delete->delete();
+                            return response()->json(200);
+                        }
+                    }
+            }
+            else
+            {
+                $delete->pieces()->detach();
+                $events = new DeleteEvent($delete->id);
+                event($events);
+                $delete->delete();
+                return response()->json(200);
+            }
     }
 }

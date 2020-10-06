@@ -27,7 +27,7 @@ import Swal from "sweetalert2";
                                     <dd class="col-sm-9 mt-3">{{tenant.email}}</dd>
 
                                     <dt class="col-sm-3 mt-3 text-truncate">Numero de CNI</dt>
-                                    <dd class="col-sm-9 mt-3">{{tenant.cin}}</dd>
+                                    <dd class="col-sm-9 mt-3">{{tenant.cni}}</dd>
 
                                     <dt class="col-sm-3 mt-3 text-truncate">profession</dt>
                                     <dd class="col-sm-9 mt-3">{{tenant.profession}}</dd>

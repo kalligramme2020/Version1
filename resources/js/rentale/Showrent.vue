@@ -84,11 +84,9 @@
                   <div class="card-body">
 
                     <div v-for="etat in rent.etats">
-                        <img v-for=" img in etat.photo " :src="img" width="100" height="100" class="ml-2">
-                        <div class="alert alert-primary text-center " role="alert">
-                            <h6 class="card-title text-left text-muted">Description:</h6>
-                            <p >{{etat.description}}</p>
-                        </div>
+                        <span>
+                            <img v-for="states in etat.photo" :src="states" alt="etat">
+                        </span>
                     </div>
                   <div class="dropdown-divider"></div>
 
@@ -136,12 +134,13 @@
             // console.log(this.$route.params.id)
             axios.get('api/rentale/'+ this.$route.params.id)
                 .then((response)=>{
-                    console.log(response.data),
+                    // console.log(response.data),
                     this.rent = response.data,
                     this.bien = response.data.bien,
                     this.locataire = response.data.locataire,
-                    this.bailieur = response.data.bailler,
+                    this.bailieur = response.data.baillieur,
                     this.etats = response.data.etats
+
                 });
         },
     }

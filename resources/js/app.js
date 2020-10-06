@@ -1,5 +1,7 @@
 require('./bootstrap');
 var moment = require('moment');
+// require('moment-precise-range-plugin');
+import 'moment-precise-range-plugin';
 import Vue from 'vue'
 
 import Echo from "laravel-echo"
