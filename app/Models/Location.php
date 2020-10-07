@@ -70,5 +70,15 @@ class Location extends Model
         }
     }
 
+//    public function getTenantAttribute()
+//    {
+//       if ( $this->locataire->isEmpty())
+//       {
+//           return $this->locataire_id = null;
+//       }
+//
+//
+//    }
+
 
 }

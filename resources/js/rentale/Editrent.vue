@@ -20,11 +20,23 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-8">
+                                <div class="form-group col-md-8" v-if="locataire !== null">
                                     <label for="bienl">locataire</label>
                                     <select class="form-control" id="bienl" v-model="locataire.id">
                                         <option selected></option>
-                                        <option v-for="locataire in locataires" :key="locataire.id" :value="locataire.id" >{{locataire.nom}}</option>
+                                        <option v-for="locataire in locataires" :key="locataire.id" :value="locataire.id" >
+                                            {{locataire.nom}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-8" v-else>
+                                    <label for="bie">locataire</label>
+                                    <select class="form-control" id="bie" v-model="editrent.locataire_id">
+                                        <option selected></option>
+                                        <option v-for="locataires in locataires" :key="locataires.id" :value="locataires.id" >
+                                            {{locataires.nom}}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -186,25 +198,23 @@
         data(){
             return{
                 editrent:{
-                    'locataire_id':"", 'loyer_hc':"",'loyer_ac':"",'debut_bail':"",
-                    "payment_date":'','fin_bail':"",'typebail':'','duration':""
+                    'locataire_id':"", 'loyer_hc':"",'loyer_ac':"",'debut_bail':"",'residence2':"",
+                    "payment_date":'','fin_bail':"",'typebail':'','duration':"",'residence1':"",
                 },
                 bienedit:{'id':"", 'name':""} ,locataire:{'id':"", 'nom':""},
 
-                bienLouer:'',locataire_id:'',
-
                 biens:"", locataires:"" , //liste des bien et locataire
-
             }
         },
 
         created(){
             axios.get('api/rentale/'+ this.$route.params.id +'/edit' )
                 .then((response)=>{
-                    console.log(response.data)
                     this.editrent = response.data
                     this.bienedit = response.data.bien
                     this.locataire = response.data.locataire
+                    console.log( this.bienedit)
+
                 })
 
             axios.get('api/rentale/create')
@@ -219,7 +229,7 @@
             EditRent(){
                 axios.patch('api/rentale/'+ this.editrent.id,{
                     bienlouer:this.bienedit.id,
-                    locataire_id:this.locataire.id,
+                    locataire_id:this.locataireId,
                     description:this.editrent.description,
                     identifiant:this.editrent.identifiant,
                     residence1:this.editrent.residence1,
@@ -318,7 +328,18 @@
                 };
             }
 
+        },
+
+        computed:{
+            locataireId(){
+                if (this.locataire === null)
+                    return this.editrent.locataire_id
+                else
+                    return this.locataire.id
+            }
         }
+
+
     }
 </script>
 

@@ -56,9 +56,13 @@
                                         <span class="bien_local" >{{location.type_bail}}</span>
                                         <i class="fas fa-map-marker-alt fa-sm"></i> <span class="bien_local" >{{location.bien.addresse}}</span>
                                     </td>
-                                    <td class="text-primary">
+                                    <td class="text-primary" v-if="location.locataire !== null ">
                                         <router-link :to="{ name: 'showtenant', params: { id: location.locataire.id }}" >{{location.locataire.nom}}</router-link>
                                     </td>
+                                    <td v-else>
+                                        <router-link :to="{ name: 'editrent', params: { id: location.id }}" >ajouter un locatire</router-link>
+                                    </td>
+
                                     <td>{{location.loyer_hc}}</td>
                                     <td>{{location.debut_bail}} - {{location.fin_bail}}</td>
 

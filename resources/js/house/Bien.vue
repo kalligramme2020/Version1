@@ -174,7 +174,7 @@
                                 {
                                     this.flashMessage.info({
                                         title: 'oups',
-                                        message: "Vous ne pouvez supprimer ce bien car il fait l'objet d'une location en cour veillez d'abord le supprimer. "});
+                                        message: "Vous ne pouvez supprimer ce bien car il a fait ou fait l'objet d'une location en cour veillez d'abord le supprimer. "});
                                 }
 
                             })

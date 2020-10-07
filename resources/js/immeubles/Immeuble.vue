@@ -37,7 +37,7 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-
+                            <FlashMessage class="flashmessage"></FlashMessage>
                             <table class="table table-striped table-bordered" style="width:100%">
                                 <thead class=" text-center">
                                 <tr>
@@ -149,11 +149,26 @@ name: "Immeuble",
                 if (result.value) {
                     axios.delete('api/bien/' + id)
                         .then((response) => {
-                            if (response.data === 200)
+                            if(response.data === 200)
+                            {
                                 Swal.fire(
                                     'Supprimer',
                                     'success'
                                 )
+                            }
+                            else if(response.data === 405)
+                            {
+                                this.flashMessage.error({
+                                    title: 'oups',
+                                    message: "Vous ne pouvez supprimer ce bien car il comporte des sous biens veiles d'abord les supprimer. "});
+                            }
+                            else
+                            {
+                                this.flashMessage.info({
+                                    title: 'oups',
+                                    message: "Vous ne pouvez supprimer ce bien car il a fait ou fait l'objet d'une location en cour veillez d'abord le supprimer. "});
+                            }
+
                         })
                 }
             })

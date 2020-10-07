@@ -225,31 +225,39 @@ class BienController extends Controller
                 return response()->json(405);
 
             }
-            elseif(count($delete->locations))
+            else
             {
+                if ( count($delete->locations) )
+                {
                     foreach ($delete->locations as $location)
                     {
                         if (strtotime($location->fin_bail) > strtotime(date("Y-m-d")))
                         {
-                            dd('oui c en cour ');
+//                            dd('oui c en cour ');
+
+
                         }
-                        elseif(strtotime($location->fin_bail) < strtotime(date("Y-m-d")))
+                        else
                         {
-                            $delete->pieces()->detach();
-                            $events = new DeleteEvent($delete->id);
-                            event($events);
-                            $delete->delete();
-                            return response()->json(200);
+
+//                            $delete->pieces()->detach();
+//                            $events = new DeleteEvent($delete->id);
+//                            event($events);
+//                            $delete->delete();
+//                            return response()->json(200);
                         }
                     }
+                }
+                else
+                {
+                    $delete->pieces()->detach();
+                    $events = new DeleteEvent($delete->id);
+                    event($events);
+                    $delete->delete();
+                    return response()->json(200);
+                }
+
             }
-            else
-            {
-                $delete->pieces()->detach();
-                $events = new DeleteEvent($delete->id);
-                event($events);
-                $delete->delete();
-                return response()->json(200);
-            }
+
     }
 }

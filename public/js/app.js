@@ -2205,7 +2205,7 @@ __webpack_require__.r(__webpack_exports__);
             } else {
               _this3.flashMessage.info({
                 title: 'oups',
-                message: "Vous ne pouvez supprimer ce bien car il fait l'objet d'une location en cour veillez d'abord le supprimer. "
+                message: "Vous ne pouvez supprimer ce bien car il a fait ou fait l'objet d'une location en cour veillez d'abord le supprimer. "
               });
             }
           });
@@ -3157,6 +3157,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     deleteBien: function deleteBien(id) {
+      var _this3 = this;
+
       sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
         text: "Etes-vous de cette action !",
         icon: 'warning',
@@ -3168,28 +3170,40 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           axios["delete"]('api/bien/' + id).then(function (response) {
-            if (response.data === 200) sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire('Supprimer', 'success');
+            if (response.data === 200) {
+              sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire('Supprimer', 'success');
+            } else if (response.data === 405) {
+              _this3.flashMessage.error({
+                title: 'oups',
+                message: "Vous ne pouvez supprimer ce bien car il comporte des sous biens veiles d'abord les supprimer. "
+              });
+            } else {
+              _this3.flashMessage.info({
+                title: 'oups',
+                message: "Vous ne pouvez supprimer ce bien car il a fait ou fait l'objet d'une location en cour veillez d'abord le supprimer. "
+              });
+            }
           });
         }
       });
     },
     // Our method to GET results from a Laravel endpoint
     getResultsPaginate: function getResultsPaginate() {
-      var _this3 = this;
+      var _this4 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       axios.get('api/bien?page=' + page).then(function (response) {
-        _this3.metaBiens = response.data;
+        _this4.metaBiens = response.data;
       });
     }
   },
   computed: {
     biens: function biens() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.keyword) return this.metaBiens.data.filter(function (_ref) {
         var name = _ref.name;
-        return name.toLowerCase().includes(_this4.keyword.toLowerCase()); // || prenom.toLowerCase().includes(this.keyword.toLowerCase())
+        return name.toLowerCase().includes(_this5.keyword.toLowerCase()); // || prenom.toLowerCase().includes(this.keyword.toLowerCase())
       });else return this.metaBiens.data;
     }
   }
@@ -4062,6 +4076,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Editrent",
   data: function data() {
@@ -4071,10 +4097,12 @@ __webpack_require__.r(__webpack_exports__);
         'loyer_hc': "",
         'loyer_ac': "",
         'debut_bail': "",
+        'residence2': "",
         "payment_date": '',
         'fin_bail': "",
         'typebail': '',
-        'duration': ""
+        'duration': "",
+        'residence1': ""
       },
       bienedit: {
         'id': "",
@@ -4084,8 +4112,6 @@ __webpack_require__.r(__webpack_exports__);
         'id': "",
         'nom': ""
       },
-      bienLouer: '',
-      locataire_id: '',
       biens: "",
       locataires: "" //liste des bien et locataire
 
@@ -4095,10 +4121,10 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('api/rentale/' + this.$route.params.id + '/edit').then(function (response) {
-      console.log(response.data);
       _this.editrent = response.data;
       _this.bienedit = response.data.bien;
       _this.locataire = response.data.locataire;
+      console.log(_this.bienedit);
     });
     axios.get('api/rentale/create').then(function (response) {
       _this.biens = response.data.biens;
@@ -4111,7 +4137,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.patch('api/rentale/' + this.editrent.id, {
         bienlouer: this.bienedit.id,
-        locataire_id: this.locataire.id,
+        locataire_id: this.locataireId,
         description: this.editrent.description,
         identifiant: this.editrent.identifiant,
         residence1: this.editrent.residence1,
@@ -4187,6 +4213,11 @@ __webpack_require__.r(__webpack_exports__);
         months: months,
         days: days
       };
+    }
+  },
+  computed: {
+    locataireId: function locataireId() {
+      if (this.locataire === null) return this.editrent.locataire_id;else return this.locataire.id;
     }
   }
 });
@@ -4669,6 +4700,10 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
 //
 //
 //
@@ -84731,6 +84766,8 @@ var render = function() {
               "div",
               { staticClass: "card-body" },
               [
+                _c("FlashMessage", { staticClass: "flashmessage" }),
+                _vm._v(" "),
                 _c(
                   "table",
                   {
@@ -86261,61 +86298,129 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "form-group col-md-8" }, [
-                  _c("label", { attrs: { for: "bienl" } }, [
-                    _vm._v("locataire")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.locataire.id,
-                          expression: "locataire.id"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { id: "bienl" },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.locataire,
-                            "id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    [
-                      _c("option", { attrs: { selected: "" } }),
+                _vm.locataire !== null
+                  ? _c("div", { staticClass: "form-group col-md-8" }, [
+                      _c("label", { attrs: { for: "bienl" } }, [
+                        _vm._v("locataire")
+                      ]),
                       _vm._v(" "),
-                      _vm._l(_vm.locataires, function(locataire) {
-                        return _c(
-                          "option",
-                          {
-                            key: locataire.id,
-                            domProps: { value: locataire.id }
-                          },
-                          [_vm._v(_vm._s(locataire.nom))]
-                        )
-                      })
-                    ],
-                    2
-                  )
-                ])
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.locataire.id,
+                              expression: "locataire.id"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { id: "bienl" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.locataire,
+                                "id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { selected: "" } }),
+                          _vm._v(" "),
+                          _vm._l(_vm.locataires, function(locataire) {
+                            return _c(
+                              "option",
+                              {
+                                key: locataire.id,
+                                domProps: { value: locataire.id }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(locataire.nom) +
+                                    "\n                                    "
+                                )
+                              ]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  : _c("div", { staticClass: "form-group col-md-8" }, [
+                      _c("label", { attrs: { for: "bie" } }, [
+                        _vm._v("locataire")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editrent.locataire_id,
+                              expression: "editrent.locataire_id"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { id: "bie" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.editrent,
+                                "locataire_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { selected: "" } }),
+                          _vm._v(" "),
+                          _vm._l(_vm.locataires, function(locataires) {
+                            return _c(
+                              "option",
+                              {
+                                key: locataires.id,
+                                domProps: { value: locataires.id }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(locataires.nom) +
+                                    "\n                                    "
+                                )
+                              ]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
               ])
             ]),
             _vm._v(" "),
@@ -88186,25 +88291,44 @@ var render = function() {
                             1
                           ),
                           _vm._v(" "),
-                          _c(
-                            "td",
-                            { staticClass: "text-primary" },
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "showtenant",
-                                      params: { id: location.locataire.id }
-                                    }
-                                  }
-                                },
-                                [_vm._v(_vm._s(location.locataire.nom))]
+                          location.locataire !== null
+                            ? _c(
+                                "td",
+                                { staticClass: "text-primary" },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      attrs: {
+                                        to: {
+                                          name: "showtenant",
+                                          params: { id: location.locataire.id }
+                                        }
+                                      }
+                                    },
+                                    [_vm._v(_vm._s(location.locataire.nom))]
+                                  )
+                                ],
+                                1
                               )
-                            ],
-                            1
-                          ),
+                            : _c(
+                                "td",
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      attrs: {
+                                        to: {
+                                          name: "editrent",
+                                          params: { id: location.id }
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("ajouter un locatire")]
+                                  )
+                                ],
+                                1
+                              ),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(location.loyer_hc))]),
                           _vm._v(" "),
