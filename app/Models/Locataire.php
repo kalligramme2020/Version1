@@ -28,10 +28,10 @@ class Locataire extends Model
         return $this->belongsToMany('App\Models\Bien', 'location','bien_id','locataire_id')->withTimestamps();
     }
 
-    public function locations()
-    {
-        return $this->hasMany('App\Models\location', 'locataire_id');
-    }
+//    public function locations()
+//    {
+//        return $this->hasMany('App\Models\location', 'locataire_id');
+//    }
 
     public function invoces()
     {
