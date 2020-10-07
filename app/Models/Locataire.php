@@ -30,7 +30,7 @@ class Locataire extends Model
 
     public function locations()
     {
-        return $this->hasMany('App\Models\location', 'locataire_id');
+        return $this->hasMany('App\Models\Location', 'locataire_id');
     }
 
     public static function boote()//supprimmer un locaataure dan le pivots
