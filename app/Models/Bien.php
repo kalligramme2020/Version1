@@ -78,7 +78,7 @@ class Bien extends Model
         }
         else
         {
-            return $this->statut = "dispo";
+            return $this->statut = "Disponible";
 
         }
     }
